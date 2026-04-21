@@ -1,4 +1,5 @@
 import { BaseScanner } from './BaseScanner.js';
+import crypto from 'crypto';
 
 export class SensitiveDataScanner extends BaseScanner {
   constructor(config) {
@@ -10,7 +11,10 @@ export class SensitiveDataScanner extends BaseScanner {
       // API Keys
       apiKeys: [
         { name: 'AWS Access Key', pattern: /AKIA[0-9A-Z]{16}/g },
-        { name: 'AWS Secret Key', pattern: /[A-Za-z0-9\/+=]{40}/g },
+        // AWS Secret Key: Require proximity to AWS context (access key, "aws", "secret")
+        // The old pattern /[A-Za-z0-9\/+=]{40}/ matched ANY 40-char alphanumeric string,
+        // producing massive FPs on minified JS, CSS hashes, and encoded data.
+        { name: 'AWS Secret Key', pattern: /(?:aws|AKIA|secret|credential)[\s\S]{0,50}([A-Za-z0-9\/+=]{40})/gi },
         { name: 'Google API Key', pattern: /AIza[0-9A-Za-z\-_]{35}/g },
         { name: 'GitHub Token', pattern: /ghp_[a-zA-Z0-9]{36}/g },
         { name: 'GitHub Token (old)', pattern: /[a-f0-9]{40}/g },
@@ -62,6 +66,12 @@ export class SensitiveDataScanner extends BaseScanner {
         { name: 'Session ID', pattern: /session[_-]?id=([a-zA-Z0-9]{16,})/gi }
       ]
     };
+
+    /**
+     * Cached baseline fingerprints for catch-all detection.
+     * Built once per scan, reused across all sensitive path checks.
+     */
+    this._baselineFingerprints = null;
   }
   
   async scan(data) {
@@ -83,7 +93,7 @@ export class SensitiveDataScanner extends BaseScanner {
     const jsVulns = await this.scanJavaScriptFiles(urls);
     vulnerabilities.push(...jsVulns);
     
-    // Scan common sensitive paths
+    // Scan common sensitive paths (now with catch-all fingerprinting)
     const pathVulns = await this.scanSensitivePaths();
     vulnerabilities.push(...pathVulns);
     
@@ -227,6 +237,19 @@ export class SensitiveDataScanner extends BaseScanner {
     return vulnerabilities;
   }
   
+  /**
+   * REFACTORED: scanSensitivePaths now uses Catch-All Fingerprinting.
+   *
+   * OLD LOGIC:
+   *   - Simply checked if status === 200 and content.length > 10 and didn't contain <!DOCTYPE>.
+   *   - This produced massive FPs on enterprise targets that return custom 200 OK pages for everything.
+   *
+   * NEW LOGIC:
+   *   1. Build baseline fingerprints by probing 3 random nonexistent paths.
+   *   2. For each sensitive path that returns 200 OK, compare its response against the baselines.
+   *   3. If the response matches the catch-all fingerprint (by hash or length similarity), discard it.
+   *   4. Additionally, check if the content actually looks like a sensitive file (not an error page).
+   */
   async scanSensitivePaths() {
     const vulnerabilities = [];
     const baseUrl = new URL(this.targetUrl).origin;
@@ -239,6 +262,11 @@ export class SensitiveDataScanner extends BaseScanner {
       '/.aws/credentials',
       '/.docker/config.json'
     ];
+
+    // ── Build catch-all fingerprints (cached for this scan) ──
+    if (!this._baselineFingerprints) {
+      this._baselineFingerprints = await this.buildBaselineFingerprints(baseUrl);
+    }
     
     for (const path of sensitivePaths) {
       if (this.stopped) break;
@@ -247,15 +275,167 @@ export class SensitiveDataScanner extends BaseScanner {
         const response = await this.makeRequest(`${baseUrl}${path}`);
         if (response && response.status === 200 && response.data) {
           const content = response.data.toString();
-          if (content.length > 10 && !content.includes('<!DOCTYPE')) {
+
+          /**
+           * CATCH-ALL CHECK:
+           * Compare this response against our baseline fingerprints.
+           * If it matches, this is a catch-all page pretending to serve the file.
+           */
+          if (this.matchesBaseline(content, response.status)) {
+            this.log(`Catch-all FP discarded for sensitive path: ${path}`, 'debug');
+            continue;
+          }
+
+          /**
+           * CONTENT VALIDATION:
+           * Even after passing the catch-all check, verify the content actually
+           * looks like a sensitive file and not an HTML error page.
+           * - Must have content > 10 bytes
+           * - Must NOT be an HTML page (unless it's a JSON/YAML config masquerading as HTML)
+           * - Must NOT contain common "not found" language
+           */
+          if (content.length > 10 && !this.looksLikeErrorPage(content)) {
             const vulns = this.scanContent(content, `${baseUrl}${path}`);
-            vulnerabilities.push(...vulns);
+
+            // Only report if we actually found sensitive data patterns in the content
+            if (vulns.length > 0) {
+              vulnerabilities.push(...vulns);
+            } else {
+              this.log(`Path ${path} returned 200 OK but no sensitive patterns found. Discarding.`, 'debug');
+            }
           }
         }
       } catch {}
     }
     
     return vulnerabilities;
+  }
+
+  /**
+   * Build baseline fingerprints by requesting guaranteed-nonexistent paths.
+   * These fingerprints represent what the server's "not found" response looks like.
+   */
+  async buildBaselineFingerprints(baseUrl) {
+    const fingerprints = [];
+
+    this.log('Building catch-all baseline fingerprints for sensitive path scanning...', 'debug');
+
+    for (let i = 0; i < 3; i++) {
+      try {
+        const randomSlug = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+        const probePath = `/vulnhunter_sensitive_fp_${randomSlug}_${Date.now()}`;
+        const response = await this.makeRequest(`${baseUrl}${probePath}`);
+
+        if (response) {
+          const bodyStr = response.data ? response.data.toString() : '';
+          fingerprints.push({
+            status: response.status,
+            length: bodyStr.length,
+            contentHash: this.hashContent(bodyStr),
+            normalizedHash: this.hashContent(this.normalizeContent(bodyStr))
+          });
+        }
+      } catch (err) {
+        this.log(`Baseline probe ${i + 1} failed: ${err.message}`, 'debug');
+      }
+    }
+
+    if (fingerprints.length === 0) {
+      return { fingerprints: [{ status: 404, length: 0, contentHash: '', normalizedHash: '' }] };
+    }
+
+    const lengths = fingerprints.map(f => f.length);
+    const lengthVariance = Math.max(...lengths) - Math.min(...lengths);
+
+    return { fingerprints, lengthVariance };
+  }
+
+  /**
+   * Check if a response matches the cached baseline fingerprints.
+   */
+  matchesBaseline(bodyStr, status) {
+    if (!this._baselineFingerprints) return false;
+
+    const { fingerprints, lengthVariance = 0 } = this._baselineFingerprints;
+    const responseHash = this.hashContent(bodyStr);
+    const responseNormalizedHash = this.hashContent(this.normalizeContent(bodyStr));
+    const responseLength = bodyStr.length;
+
+    for (const fp of fingerprints) {
+      // Exact content match — definitely a catch-all page
+      if (responseHash === fp.contentHash && fp.contentHash !== '') return true;
+
+      // Normalized content match — catch-all with dynamic tokens
+      if (responseNormalizedHash === fp.normalizedHash && fp.normalizedHash !== '') return true;
+
+      // Status + length similarity — within variance tolerance
+      if (status === fp.status) {
+        const tolerance = Math.max(200, (lengthVariance || 0) * 2);
+        if (Math.abs(responseLength - fp.length) < tolerance) return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Simple djb2 hash for fast content comparison.
+   */
+  hashContent(content) {
+    if (!content) return '';
+    let hash = 5381;
+    for (let i = 0; i < content.length; i++) {
+      hash = ((hash << 5) + hash) + content.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16);
+  }
+
+  /**
+   * Normalize content by stripping dynamic tokens to enable structural comparison.
+   */
+  normalizeContent(content) {
+    if (!content) return '';
+    return content
+      .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '')
+      .replace(/\b\d{10,13}\b/g, '')
+      .replace(/nonce="[^"]*"/gi, '')
+      .replace(/csrf[_-]?token[^"]*"[^"]*"/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
+   * Heuristic: does the content look like a "not found" error page?
+   */
+  looksLikeErrorPage(content) {
+    if (!content || content.length < 50) return false;
+
+    const lowerContent = content.toLowerCase();
+
+    // If it starts with common config file patterns, it's NOT an error page
+    // (e.g., .env files start with KEY=VALUE, JSON files start with {, YAML with ---)
+    if (content.trim().startsWith('{') || content.trim().startsWith('---') || /^[A-Z_]+=/.test(content.trim())) {
+      return false;
+    }
+
+    const errorIndicators = [
+      'page not found', '404 not found', 'not found', 'does not exist',
+      'could not be found', 'no longer available', 'error 404',
+      'we couldn\'t find', 'nothing here', 'page doesn\'t exist',
+      '<!doctype html', '<html'
+    ];
+
+    let matchCount = 0;
+    for (const indicator of errorIndicators) {
+      if (lowerContent.includes(indicator)) matchCount++;
+    }
+
+    // HTML page with error language = almost certainly a custom 404
+    if (matchCount >= 2) return true;
+    if (matchCount === 1 && content.length < 5000) return true;
+
+    return false;
   }
   
   maskSecret(secret) {
@@ -264,18 +444,41 @@ export class SensitiveDataScanner extends BaseScanner {
   }
   
   isFalsePositive(match, type) {
-    // Filter out common false positives
+    // ── Basic pattern-based FP filters ──
     const falsePositives = [
       /^0+$/, // All zeros
       /^1+$/, // All ones
-      /^[a-z]+$/i, // Only letters
-      /example|test|demo|sample|placeholder/i
+      /^[a-z]+$/i, // Only letters (no digits = not a key)
+      /example|test|demo|sample|placeholder|undefined|null|true|false/i, // Common placeholder values
+      /^[0-9]+$/, // Pure numeric strings (not API keys)
     ];
     
     for (const fp of falsePositives) {
       if (fp.test(match)) return true;
     }
-    
+
+    /**
+     * CONTEXT-AWARE FP FILTERING:
+     * Many high-entropy strings in web pages are NOT secrets:
+     * - CSS content hashes (e.g., webpack chunk IDs)
+     * - Base64-encoded image data URIs
+     * - JavaScript minification artifacts
+     * - Integrity hashes (SRI)
+     * - Google/Facebook tracking parameters
+     */
+
+    // Reject matches that are purely hex (likely a hash, not a key)
+    if (type === 'AWS Secret Key' && /^[a-f0-9]+$/i.test(match)) return true;
+
+    // Reject matches found inside HTML tags (likely attribute values, not leaked keys)
+    if (type === 'GitHub Token (old)' && /^[a-f0-9]{40}$/.test(match)) {
+      // 40-char hex strings are almost always SHA1 hashes (git commits, SRI, etc.)
+      return true;
+    }
+
+    // Reject very common base64 padding patterns (not real keys)
+    if (/={3,}$/.test(match)) return true;
+
     return false;
   }
 }

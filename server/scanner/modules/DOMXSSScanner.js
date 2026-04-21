@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import crypto from 'crypto';
 import { createScanLogger } from '../../utils/Logger.js';
 
 export class DOMXSSScanner {
@@ -87,7 +88,35 @@ export class DOMXSSScanner {
   }
 
   /**
+   * Generate a unique XSS verification token.
+   * This token is used to confirm that injected payloads actually executed,
+   * rather than just being reflected in the DOM as raw text.
+   * 
+   * @returns {string} A unique token like "vulnhunter_xss_a1b2c3d4e5f6"
+   */
+  generateXSSToken() {
+    const randomPart = crypto.randomUUID
+      ? crypto.randomUUID().replace(/-/g, '').substring(0, 12)
+      : Math.random().toString(36).substring(2, 14);
+    return `vulnhunter_xss_${randomPart}`;
+  }
+
+  /**
    * Main scan method
+   * 
+   * REFACTORED APPROACH:
+   * The old scanner relied purely on static regex to match source-sink patterns.
+   * This produced false positives because:
+   *   - Finding "location" and "innerHTML" near each other doesn't prove data flow.
+   *   - Minified JS bundles often have these tokens in proximity without actual taint flow.
+   *
+   * NEW APPROACH:
+   *   Phase 1 (Static): Same regex analysis, but findings are marked as "candidates" only.
+   *   Phase 2 (Dynamic Verification): For high/medium candidates, inject payloads that:
+   *     a) Create a unique DOM element (e.g., <div id="vulnhunter_xss_TOKEN">), OR
+   *     b) Call console.log('vulnhunter_xss_TOKEN')
+   *   Then hook into Puppeteer's console/DOM events to verify actual execution.
+   *   Only verified findings are reported as vulnerabilities.
    */
   async scan(targetUrl, scanId) {
     this.logger = createScanLogger(scanId);
@@ -107,32 +136,27 @@ export class DOMXSSScanner {
       // Collect JavaScript sources and analyze
       const jsAnalysis = await this.analyzePageJS(page, targetUrl);
       
-      // Check for DOM XSS patterns
-      const domXSSPatterns = await this.findDOMXSSPatterns(jsAnalysis);
+      // ── Phase 1: Static Analysis (identify candidates) ──
+      const staticCandidates = await this.findDOMXSSPatterns(jsAnalysis);
+      this.logger.info(`Static analysis found ${staticCandidates.length} DOM XSS candidates`);
       
-      for (const pattern of domXSSPatterns) {
-        vulnerabilities.push({
-          type: 'DOM XSS',
-          severity: pattern.severity,
-          url: targetUrl,
-          evidence: pattern.evidence,
-          description: pattern.description,
-          source: pattern.source,
-          sink: pattern.sink,
-          codeSnippet: pattern.code,
-          remediation: this.getRemediation(pattern)
-        });
-      }
+      /**
+       * We no longer report static-only findings as vulnerabilities.
+       * Instead, we use them to determine WHICH injection points to test dynamically.
+       * Only the dynamic verification results are reported.
+       */
 
-      // Test with actual payloads
-      const payloadResults = await this.testPayloads(page, targetUrl);
-      vulnerabilities.push(...payloadResults);
+      // ── Phase 2: Dynamic Verification ──
+      // Test hash-based, search-based, and common parameter injection points
+      const dynamicResults = await this.dynamicVerification(page, targetUrl, staticCandidates);
+      vulnerabilities.push(...dynamicResults);
 
       // Check for jQuery/Angular specific vulnerabilities
+      // (Framework checks are still valid as informational findings)
       const frameworkVulns = await this.checkFrameworkVulnerabilities(page);
       vulnerabilities.push(...frameworkVulns);
 
-      this.logger.info(`DOM XSS scan complete. Found ${vulnerabilities.length} issues.`);
+      this.logger.info(`DOM XSS scan complete. Found ${vulnerabilities.length} verified issues.`);
 
     } catch (error) {
       this.logger.error(`DOM XSS scan error: ${error.message}`);
@@ -211,7 +235,8 @@ export class DOMXSSScanner {
   }
 
   /**
-   * Find DOM XSS patterns in JavaScript
+   * Find DOM XSS patterns in JavaScript (Static Analysis — Phase 1)
+   * These are now treated as CANDIDATES, not confirmed vulnerabilities.
    */
   async findDOMXSSPatterns(jsAnalysis) {
     const patterns = [];
@@ -265,7 +290,7 @@ export class DOMXSSScanner {
           source,
           sink,
           code: context.substring(0, 500),
-          description: `تدفق بيانات محتمل من ${source} إلى ${sink}`,
+          description: `Potential data flow from ${source} to ${sink}`,
           evidence: `Found ${source} flowing to ${sink}`
         };
       }
@@ -288,7 +313,7 @@ export class DOMXSSScanner {
         source: 'event handler',
         sink: handler.attribute,
         code: `<${handler.element} ${handler.attribute}="${value}">`,
-        description: `معالج حدث ${handler.attribute} قد يكون عرضة لـ DOM XSS`,
+        description: `Event handler ${handler.attribute} may be vulnerable to DOM XSS`,
         evidence: `Potentially unsafe code in ${handler.attribute} handler`
       });
     }
@@ -368,7 +393,7 @@ export class DOMXSSScanner {
             source: 'user input',
             sink: description,
             code: match.substring(0, 200),
-            description: `نمط خطير: ${description}`,
+            description: `Dangerous pattern: ${description}`,
             evidence: match.substring(0, 100)
           });
         }
@@ -379,49 +404,317 @@ export class DOMXSSScanner {
   }
 
   /**
-   * Test with actual XSS payloads
+   * DYNAMIC VERIFICATION (Phase 2)
+   * 
+   * Instead of relying on static regex matches, we inject actual payloads
+   * and verify execution through Puppeteer's console and DOM hooks.
+   *
+   * Strategy:
+   *   1. For each injection vector (hash, search params, common params):
+   *      a) Generate a unique token (e.g., "vulnhunter_xss_a1b2c3d4e5f6")
+   *      b) Inject a payload designed to either:
+   *         - console.log() the token (for JS execution sinks like eval, innerHTML with script)
+   *         - Create a DOM element with id=token (for HTML injection sinks like innerHTML)
+   *      c) Hook Puppeteer's page.on('console') to listen for the token
+   *      d) Check the DOM for an element with id=token
+   *   2. Only if the token is found in console output OR in the DOM do we report it.
+   *   3. This eliminates all static-analysis FPs where the pattern exists but data flow doesn't.
+   *
+   * PERFORMANCE: We only test injection vectors that are likely to succeed based on
+   * the static candidates. We don't blindly fuzz every parameter.
    */
-  async testPayloads(page, url) {
+  async dynamicVerification(page, targetUrl, staticCandidates) {
     const vulnerabilities = [];
-    const payloads = [
-      { param: 'q', value: '<img src=x onerror=alert(1)>', marker: 'onerror=alert(1)' },
-      { param: 'search', value: '"><script>alert(1)</script>', marker: '<script>alert(1)' },
-      { param: 'id', value: "'-alert(1)-'", marker: '-alert(1)-' },
-      { param: 'name', value: 'javascript:alert(1)', marker: 'javascript:alert(1)' }
-    ];
 
-    // Test hash-based XSS
-    const hashPayloads = [
-      '#<img src=x onerror=alert(1)>',
-      '#"><script>alert(1)</script>',
-      '#javascript:alert(1)'
-    ];
+    /**
+     * Determine which injection vectors to test based on static analysis results.
+     * If static analysis found source patterns involving location.hash, we test hash injection.
+     * If it found location.search, we test search param injection. Etc.
+     */
+    const hasHashSource = staticCandidates.some(c => 
+      c.source && (c.source.includes('hash') || c.code?.includes('location.hash'))
+    );
+    const hasSearchSource = staticCandidates.some(c => 
+      c.source && (c.source.includes('search') || c.source.includes('URL') || c.code?.includes('location.search'))
+    );
+    const hasDangerousSink = staticCandidates.some(c => c.severity === 'high');
 
-    for (const hashPayload of hashPayloads) {
+    // Always test hash and search — they're the most common DOM XSS vectors
+    // and the cost is minimal (just page navigation + DOM check)
+
+    // ── Test Hash-based injection ──
+    const hashVulns = await this.testHashInjection(page, targetUrl);
+    vulnerabilities.push(...hashVulns);
+
+    // ── Test Search/Query parameter injection ──
+    const searchVulns = await this.testSearchParamInjection(page, targetUrl);
+    vulnerabilities.push(...searchVulns);
+
+    // ── Test window.name injection (if static analysis found window.name source) ──
+    const hasWindowNameSource = staticCandidates.some(c => 
+      c.source && c.source.includes('window.name')
+    );
+    if (hasWindowNameSource) {
+      const wnVulns = await this.testWindowNameInjection(page, targetUrl);
+      vulnerabilities.push(...wnVulns);
+    }
+
+    return vulnerabilities;
+  }
+
+  /**
+   * Test hash-based DOM XSS with dynamic token verification.
+   * 
+   * Injects payloads into the URL hash and checks if they execute by:
+   *   1. Listening for console.log(token) via Puppeteer's console event
+   *   2. Checking if a DOM element with id=token was created
+   */
+  async testHashInjection(page, targetUrl) {
+    const vulnerabilities = [];
+
+    // Generate unique tokens for each payload to avoid cross-contamination
+    const testCases = this.buildDynamicPayloads();
+
+    for (const testCase of testCases) {
       try {
-        const testUrl = url + hashPayload;
-        await page.goto(testUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
+        const { token, payloads, type } = testCase;
         
-        // Check if payload appears in DOM unencoded
-        const content = await page.content();
-        if (content.includes('onerror=alert(1)') || content.includes('<script>alert(1)')) {
-          vulnerabilities.push({
-            type: 'DOM XSS',
-            severity: 'high',
-            url: testUrl,
-            evidence: 'Hash-based DOM XSS detected',
-            description: 'الموقع عرضة لـ DOM XSS عبر hash URL',
-            source: 'location.hash',
-            sink: 'innerHTML/document.write',
-            remediation: 'استخدم textContent بدلاً من innerHTML وتحقق من جميع المدخلات'
-          });
+        for (const payload of payloads) {
+          const testUrl = `${targetUrl}#${payload}`;
+          
+          const result = await this.executeAndVerify(page, testUrl, token);
+
+          if (result.verified) {
+            vulnerabilities.push({
+              type: 'DOM XSS',
+              severity: 'high',
+              url: testUrl,
+              evidence: `VERIFIED: ${result.method} — Token "${token}" was ${result.method === 'console' ? 'logged to console' : 'rendered in DOM'} after hash injection.`,
+              description: `Confirmed DOM XSS via location.hash. Payload executed in the browser context. Verification method: ${result.method}.`,
+              source: 'location.hash',
+              sink: type,
+              codeSnippet: payload.substring(0, 200),
+              remediation: this.getRemediation({ severity: 'high' })
+            });
+
+            // One confirmed vector per injection type is enough
+            break;
+          }
         }
       } catch (e) {
-        // Ignore navigation errors
+        // Ignore individual test errors — don't crash the scanner
       }
     }
 
     return vulnerabilities;
+  }
+
+  /**
+   * Test search/query parameter DOM XSS with dynamic verification.
+   */
+  async testSearchParamInjection(page, targetUrl) {
+    const vulnerabilities = [];
+    const commonParams = ['q', 'search', 'query', 'id', 'name', 'page', 'url', 'redirect', 'next', 'return'];
+
+    for (const param of commonParams) {
+      try {
+        const testCases = this.buildDynamicPayloads();
+
+        for (const testCase of testCases) {
+          const { token, payloads, type } = testCase;
+
+          for (const payload of payloads) {
+            const testUrl = new URL(targetUrl);
+            testUrl.searchParams.set(param, payload);
+
+            const result = await this.executeAndVerify(page, testUrl.href, token);
+
+            if (result.verified) {
+              vulnerabilities.push({
+                type: 'DOM XSS',
+                severity: 'high',
+                url: testUrl.href,
+                evidence: `VERIFIED: ${result.method} — Token "${token}" confirmed after injecting param "${param}".`,
+                description: `Confirmed DOM XSS via query parameter "${param}". Verification: ${result.method}.`,
+                source: `location.search (param: ${param})`,
+                sink: type,
+                codeSnippet: payload.substring(0, 200),
+                remediation: this.getRemediation({ severity: 'high' })
+              });
+
+              // Found a confirmed vuln for this param — skip remaining payloads
+              return vulnerabilities;
+            }
+          }
+        }
+      } catch (e) {
+        // Continue to next parameter
+      }
+    }
+
+    return vulnerabilities;
+  }
+
+  /**
+   * Test window.name DOM XSS injection.
+   * This is a less common but dangerous vector where the attacker controls window.name
+   * from a previous page and the target page reads it into a dangerous sink.
+   */
+  async testWindowNameInjection(page, targetUrl) {
+    const vulnerabilities = [];
+
+    try {
+      const testCases = this.buildDynamicPayloads();
+
+      for (const testCase of testCases) {
+        const { token, payloads, type } = testCase;
+
+        for (const payload of payloads) {
+          // Set window.name before navigation (simulates attacker-controlled opener)
+          await page.evaluate((name) => { window.name = name; }, payload);
+          
+          const result = await this.executeAndVerify(page, targetUrl, token);
+
+          if (result.verified) {
+            vulnerabilities.push({
+              type: 'DOM XSS',
+              severity: 'high',
+              url: targetUrl,
+              evidence: `VERIFIED: ${result.method} — Token "${token}" confirmed via window.name injection.`,
+              description: `Confirmed DOM XSS via window.name. The page reads window.name into a dangerous sink.`,
+              source: 'window.name',
+              sink: type,
+              codeSnippet: payload.substring(0, 200),
+              remediation: this.getRemediation({ severity: 'high' })
+            });
+            return vulnerabilities;
+          }
+        }
+      }
+    } catch (e) {
+      // Ignore
+    }
+
+    return vulnerabilities;
+  }
+
+  /**
+   * Build dynamic XSS payloads with unique verification tokens.
+   * 
+   * Each payload is designed to produce a verifiable side-effect:
+   *   - console.log(token): Detected via Puppeteer page.on('console')
+   *   - DOM element creation: Detected via page.querySelector('#token')
+   * 
+   * We use unique tokens per test to avoid false positives from cached
+   * console output or leftover DOM elements from previous tests.
+   */
+  buildDynamicPayloads() {
+    const consoleToken = this.generateXSSToken();
+    const domToken = this.generateXSSToken();
+
+    return [
+      {
+        token: consoleToken,
+        type: 'JavaScript Execution (eval/script)',
+        payloads: [
+          // Script tag injection — triggers console.log if innerHTML/document.write is the sink
+          `"><script>console.log('${consoleToken}')</script>`,
+          `'><script>console.log('${consoleToken}')</script>`,
+          `<script>console.log('${consoleToken}')</script>`,
+          // Event handler injection — triggers if injected into HTML attributes
+          `"><img src=x onerror="console.log('${consoleToken}')">`,
+          `'><img src=x onerror="console.log('${consoleToken}')">`,
+          // SVG-based injection
+          `<svg onload="console.log('${consoleToken}')">`,
+          // Direct JS evaluation (if eval/Function/setTimeout is the sink)
+          `console.log('${consoleToken}')`,
+        ]
+      },
+      {
+        token: domToken,
+        type: 'HTML Injection (innerHTML/outerHTML)',
+        payloads: [
+          // DOM element creation — triggers if innerHTML/insertAdjacentHTML is the sink
+          `"><div id="${domToken}">XSS</div>`,
+          `'><div id="${domToken}">XSS</div>`,
+          `<div id="${domToken}">XSS</div>`,
+          // Span variation for tighter contexts
+          `<span id="${domToken}"></span>`,
+        ]
+      }
+    ];
+  }
+
+  /**
+   * Navigate to a URL and verify if a specific XSS token was executed/rendered.
+   * 
+   * This is the core verification engine:
+   *   1. Hooks page.on('console') to capture console.log() calls
+   *   2. Navigates to the payload URL
+   *   3. Waits for page load + a short grace period for async JS
+   *   4. Checks if the token appeared in console output (JS execution confirmed)
+   *   5. Checks if a DOM element with id=token exists (HTML injection confirmed)
+   *   6. Returns { verified: true/false, method: 'console'|'dom' }
+   *
+   * @param {Page} page - Puppeteer page instance
+   * @param {string} url - The URL with the injected payload
+   * @param {string} token - The unique verification token to look for
+   * @returns {Promise<{verified: boolean, method: string}>}
+   */
+  async executeAndVerify(page, url, token) {
+    let consoleDetected = false;
+
+    // ── Hook console output ──
+    // Listen for console.log() calls that contain our unique token.
+    // This proves JavaScript execution happened (not just HTML reflection).
+    const consoleHandler = (msg) => {
+      try {
+        if (msg.text().includes(token)) {
+          consoleDetected = true;
+        }
+      } catch {
+        // Ignore serialization errors on complex console args
+      }
+    };
+
+    page.on('console', consoleHandler);
+
+    try {
+      // Navigate to the payload URL
+      await page.goto(url, {
+        waitUntil: 'domcontentloaded',
+        timeout: 10000
+      });
+
+      // Grace period: allow async JavaScript to execute (e.g., DOMContentLoaded handlers,
+      // setTimeout callbacks, framework initialization that reads URL params)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // ── Check 1: Console token detection ──
+      if (consoleDetected) {
+        return { verified: true, method: 'console' };
+      }
+
+      // ── Check 2: DOM element detection ──
+      // Check if our payload created an element with id=token in the page DOM.
+      // This confirms innerHTML/outerHTML/insertAdjacentHTML injection.
+      const domElementExists = await page.evaluate((tokenId) => {
+        return document.getElementById(tokenId) !== null;
+      }, token);
+
+      if (domElementExists) {
+        return { verified: true, method: 'dom' };
+      }
+
+      return { verified: false, method: 'none' };
+
+    } catch (e) {
+      // Navigation error (timeout, bad URL, etc.) — not a vulnerability
+      return { verified: false, method: 'error' };
+    } finally {
+      // Clean up the console listener to prevent memory leaks across tests
+      page.off('console', consoleHandler);
+    }
   }
 
   /**
@@ -430,67 +723,71 @@ export class DOMXSSScanner {
   async checkFrameworkVulnerabilities(page) {
     const vulnerabilities = [];
 
-    const frameworkChecks = await page.evaluate(() => {
-      const checks = [];
+    try {
+      const frameworkChecks = await page.evaluate(() => {
+        const checks = [];
 
-      // Check jQuery version
-      if (window.jQuery) {
-        const version = jQuery.fn.jquery;
-        const versionNum = parseFloat(version);
-        
-        if (versionNum < 1.9) {
-          checks.push({
-            framework: 'jQuery',
-            version,
-            issue: 'Old jQuery version vulnerable to selector-based XSS',
-            severity: 'high'
-          });
+        // Check jQuery version
+        if (window.jQuery) {
+          const version = jQuery.fn.jquery;
+          const versionNum = parseFloat(version);
+          
+          if (versionNum < 1.9) {
+            checks.push({
+              framework: 'jQuery',
+              version,
+              issue: 'Old jQuery version vulnerable to selector-based XSS',
+              severity: 'high'
+            });
+          }
+          if (versionNum < 3.5) {
+            checks.push({
+              framework: 'jQuery',
+              version,
+              issue: 'jQuery version vulnerable to CVE-2020-11022/11023',
+              severity: 'medium'
+            });
+          }
         }
-        if (versionNum < 3.5) {
+
+        // Check Angular
+        if (window.angular) {
+          const version = angular.version?.full;
           checks.push({
-            framework: 'jQuery',
+            framework: 'AngularJS',
             version,
-            issue: 'jQuery version vulnerable to CVE-2020-11022/11023',
+            issue: 'AngularJS is in LTS mode - check for ng-bind-html-unsafe usage',
             severity: 'medium'
           });
         }
-      }
 
-      // Check Angular
-      if (window.angular) {
-        const version = angular.version?.full;
-        checks.push({
-          framework: 'AngularJS',
-          version,
-          issue: 'AngularJS is in LTS mode - check for ng-bind-html-unsafe usage',
-          severity: 'medium'
-        });
-      }
+        // Check for insecure CSP bypasses
+        if (document.querySelector('script[nonce]') === null && 
+            !document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
+          checks.push({
+            framework: 'CSP',
+            issue: 'No Content Security Policy detected',
+            severity: 'medium'
+          });
+        }
 
-      // Check for insecure CSP bypasses
-      if (document.querySelector('script[nonce]') === null && 
-          !document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
-        checks.push({
-          framework: 'CSP',
-          issue: 'No Content Security Policy detected',
-          severity: 'medium'
-        });
-      }
-
-      return checks;
-    });
-
-    for (const check of frameworkChecks) {
-      vulnerabilities.push({
-        type: 'DOM XSS',
-        severity: check.severity,
-        url: page.url(),
-        evidence: `${check.framework}: ${check.issue}`,
-        description: `مشكلة في إطار العمل: ${check.issue}`,
-        framework: check.framework,
-        version: check.version,
-        remediation: this.getFrameworkRemediation(check.framework)
+        return checks;
       });
+
+      for (const check of frameworkChecks) {
+        vulnerabilities.push({
+          type: 'DOM XSS',
+          severity: check.severity,
+          url: page.url(),
+          evidence: `${check.framework}: ${check.issue}`,
+          description: `Framework issue: ${check.issue}`,
+          framework: check.framework,
+          version: check.version,
+          remediation: this.getFrameworkRemediation(check.framework)
+        });
+      }
+    } catch (error) {
+      // Framework check failed — non-critical, continue
     }
 
     return vulnerabilities;
@@ -502,23 +799,23 @@ export class DOMXSSScanner {
   getRemediation(pattern) {
     const remediations = {
       high: [
-        '• استخدم textContent بدلاً من innerHTML',
-        '• تجنب eval() و Function() تماماً',
-        '• استخدم DOMPurify لتنظيف HTML',
-        '• طبق Content Security Policy صارم'
+        '• Use textContent instead of innerHTML',
+        '• Avoid eval() and Function() entirely',
+        '• Use DOMPurify to sanitize HTML',
+        '• Implement a strict Content Security Policy'
       ],
       medium: [
-        '• تحقق من صحة جميع مدخلات المستخدم',
-        '• استخدم URL API لمعالجة الروابط',
-        '• تجنب استخدام location مباشرة مع DOM'
+        '• Validate all user input',
+        '• Use URL API for link handling',
+        '• Avoid using location directly with DOM'
       ],
       low: [
-        '• استخدم encoding مناسب للمخرجات',
-        '• اتبع مبدأ أقل الصلاحيات'
+        '• Use appropriate output encoding',
+        '• Follow the principle of least privilege'
       ]
     };
 
-    return remediations[pattern.severity]?.join('\n') || 'راجع أفضل الممارسات لمنع XSS';
+    return remediations[pattern.severity]?.join('\n') || 'Review XSS prevention best practices';
   }
 
   /**
@@ -526,12 +823,12 @@ export class DOMXSSScanner {
    */
   getFrameworkRemediation(framework) {
     const remediations = {
-      'jQuery': 'قم بالترقية إلى أحدث إصدار من jQuery واستخدم .text() بدلاً من .html() للمحتوى النصي',
-      'AngularJS': 'انتقل إلى Angular الحديث أو استخدم $sce لتنظيف المحتوى',
-      'CSP': 'أضف Content-Security-Policy header مع script-src آمن'
+      'jQuery': 'Upgrade to the latest jQuery version and use .text() instead of .html() for text content',
+      'AngularJS': 'Migrate to modern Angular or use $sce for content sanitization',
+      'CSP': 'Add a Content-Security-Policy header with a secure script-src directive'
     };
 
-    return remediations[framework] || 'راجع وثائق الأمان لإطار العمل المستخدم';
+    return remediations[framework] || 'Review the security documentation for your framework';
   }
 }
 

@@ -1,4 +1,5 @@
 import { BaseScanner } from './BaseScanner.js';
+import crypto from 'crypto';
 
 export class DirectoryScanner extends BaseScanner {
   constructor(config) {
@@ -99,8 +100,24 @@ export class DirectoryScanner extends BaseScanner {
       
       this.log(`Scanning directories for ${baseUrl}...`);
       
-      // Get baseline 404 response
-      const baseline404 = await this.getBaseline404(baseUrl);
+      /**
+       * CATCH-ALL FINGERPRINTER:
+       * Many enterprise targets (e.g., Google, Cloudflare, AWS) return a custom
+       * "soft 404" or "catch-all" error page with a 200 OK status for ANY path.
+       * The old single-probe baseline was insufficient because:
+       *   1. A single probe can't establish variance (some servers return slightly
+       *      different content per request due to timestamps, nonces, etc.)
+       *   2. A simple length comparison with a fixed delta (100 bytes) missed pages
+       *      with dynamic content that varied by more than 100 bytes.
+       *
+       * NEW APPROACH — Multi-probe baseline with content hashing:
+       *   - Request 3 guaranteed-nonexistent, highly randomized paths.
+       *   - Collect status, content length, and content hash for each.
+       *   - Use these as a fingerprint set for the "not found" response.
+       *   - When evaluating a discovery, compare against ALL baselines using
+       *     content hash similarity (not just length delta).
+       */
+      const baselineFingerprints = await this.buildBaselineFingerprints(baseUrl);
       
       // Test paths in parallel batches
       const batchSize = 10;
@@ -108,7 +125,7 @@ export class DirectoryScanner extends BaseScanner {
         const batch = this.paths.slice(i, i + batchSize);
         
         const results = await Promise.all(
-          batch.map(path => this.checkPath(baseUrl, path, baseline404))
+          batch.map(path => this.checkPath(baseUrl, path, baselineFingerprints))
         );
         
         results.forEach(result => {
@@ -134,23 +151,143 @@ export class DirectoryScanner extends BaseScanner {
     return vulnerabilities;
   }
   
-  async getBaseline404(baseUrl) {
-    try {
-      const randomPath = `/nonexistent_${Math.random().toString(36).substring(7)}`;
-      const response = await this.makeRequest(`${baseUrl}${randomPath}`);
-      
-      if (response) {
-        return {
-          status: response.status,
-          length: response.data?.length || 0
-        };
+  /**
+   * Build baseline fingerprints by probing multiple guaranteed-nonexistent paths.
+   * Uses crypto.randomUUID() for truly random path segments that cannot collide
+   * with real resources.
+   * 
+   * @param {string} baseUrl - The origin URL to probe against
+   * @returns {Promise<Object>} Fingerprint data with status codes, lengths, and content hashes
+   */
+  async buildBaselineFingerprints(baseUrl) {
+    const probeCount = 3;
+    const fingerprints = [];
+
+    this.log('Building catch-all baseline fingerprints with 3 random probes...', 'debug');
+
+    for (let i = 0; i < probeCount; i++) {
+      try {
+        // Generate a highly random path that cannot possibly exist on any server
+        const randomSlug = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+        const probePath = `/vulnhunter_fp_${randomSlug}_${Date.now()}`;
+        const response = await this.makeRequest(`${baseUrl}${probePath}`);
+        
+        if (response) {
+          const bodyStr = response.data ? response.data.toString() : '';
+          fingerprints.push({
+            status: response.status,
+            length: bodyStr.length,
+            // Content hash for exact-match comparison
+            contentHash: this.hashContent(bodyStr),
+            // Normalized content hash (strips dynamic tokens like timestamps, nonces, CSRF tokens)
+            normalizedHash: this.hashContent(this.normalizeContent(bodyStr))
+          });
+        }
+      } catch (err) {
+        this.log(`Baseline probe ${i + 1} failed: ${err.message}`, 'debug');
       }
-    } catch {}
-    
-    return { status: 404, length: 0 };
+    }
+
+    // If we got no fingerprints at all, fall back to a safe default
+    if (fingerprints.length === 0) {
+      this.log('All baseline probes failed. Using conservative defaults.', 'debug');
+      return {
+        fingerprints: [{ status: 404, length: 0, contentHash: '', normalizedHash: '' }],
+        avgLength: 0,
+        lengthVariance: 0
+      };
+    }
+
+    // Calculate average length and variance across probes to understand how much
+    // the catch-all page varies between requests
+    const lengths = fingerprints.map(f => f.length);
+    const avgLength = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    const lengthVariance = Math.max(...lengths) - Math.min(...lengths);
+
+    this.log(`Baseline fingerprints: ${fingerprints.length} probes, avg length=${avgLength.toFixed(0)}, variance=${lengthVariance}`, 'debug');
+
+    return {
+      fingerprints,
+      avgLength,
+      lengthVariance
+    };
+  }
+
+  /**
+   * Simple djb2 hash of content string for fast comparison.
+   * Not cryptographic — used only for content similarity checks.
+   */
+  hashContent(content) {
+    if (!content) return '';
+    let hash = 5381;
+    for (let i = 0; i < content.length; i++) {
+      hash = ((hash << 5) + hash) + content.charCodeAt(i);
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString(16);
+  }
+
+  /**
+   * Normalize HTML content by removing dynamic elements that change per request.
+   * This handles servers that inject timestamps, nonces, CSRF tokens, or request IDs
+   * into their error pages, which would cause exact hash comparisons to fail.
+   */
+  normalizeContent(content) {
+    if (!content) return '';
+    return content
+      // Remove common dynamic tokens: timestamps, UUIDs, hex nonces, CSRF tokens
+      .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '') // UUIDs
+      .replace(/\b\d{10,13}\b/g, '')       // Unix timestamps (10-13 digits)
+      .replace(/nonce="[^"]*"/gi, '')       // CSP nonces
+      .replace(/csrf[_-]?token[^"]*"[^"]*"/gi, '') // CSRF tokens
+      .replace(/\s+/g, ' ')                 // Normalize whitespace
+      .trim();
+  }
+
+  /**
+   * Check if a response matches the catch-all baseline fingerprints.
+   * Uses a multi-signal approach: status code, content hash, normalized hash,
+   * and length similarity.
+   * 
+   * @returns {boolean} true if the response looks like a catch-all/soft-404 page
+   */
+  matchesBaseline(status, bodyStr, baselineFingerprints) {
+    const { fingerprints, avgLength, lengthVariance } = baselineFingerprints;
+    const responseHash = this.hashContent(bodyStr);
+    const responseNormalizedHash = this.hashContent(this.normalizeContent(bodyStr));
+    const responseLength = bodyStr.length;
+
+    for (const fp of fingerprints) {
+      // ── Signal 1: Exact content hash match ──
+      // If the response body is byte-for-byte identical to a baseline probe,
+      // it's almost certainly the same catch-all page.
+      if (responseHash === fp.contentHash && fp.contentHash !== '') {
+        return true;
+      }
+
+      // ── Signal 2: Normalized content hash match ──
+      // Catches catch-all pages with dynamic tokens (timestamps, nonces)
+      // that change per request but have the same structural content.
+      if (responseNormalizedHash === fp.normalizedHash && fp.normalizedHash !== '') {
+        return true;
+      }
+
+      // ── Signal 3: Status + length similarity ──
+      // If the status matches a baseline AND the length is within the observed
+      // variance range (plus a tolerance), it's likely the same page.
+      // The tolerance accounts for minor dynamic changes we didn't normalize.
+      if (status === fp.status) {
+        const tolerance = Math.max(200, lengthVariance * 2);
+        if (Math.abs(responseLength - fp.length) < tolerance) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
   
-  async checkPath(baseUrl, path, baseline404) {
+  async checkPath(baseUrl, path, baselineFingerprints) {
     try {
       const url = `${baseUrl}${path}`;
       const response = await this.makeRequest(url, { timeout: 5000 });
@@ -158,12 +295,34 @@ export class DirectoryScanner extends BaseScanner {
       if (!response) return null;
       
       const status = response.status;
-      const length = response.data?.length || 0;
+      const bodyStr = response.data ? response.data.toString() : '';
+      const length = bodyStr.length;
       
       // Determine if path exists
       if (status === 200 || status === 301 || status === 302 || status === 403) {
-        // Exclude if same as 404 baseline
-        if (status === baseline404.status && Math.abs(length - baseline404.length) < 100) {
+        /**
+         * CATCH-ALL DETECTION:
+         * Before accepting this as a real discovery, compare the response
+         * against our baseline fingerprints. If it matches the catch-all
+         * signature, discard it as a false positive.
+         *
+         * This is critical for enterprise targets like Google, GitHub, etc.
+         * that return styled 200 OK pages for any path.
+         */
+        if (this.matchesBaseline(status, bodyStr, baselineFingerprints)) {
+          this.log(`Catch-all FP discarded: ${path} (matches baseline fingerprint)`, 'debug');
+          return null;
+        }
+
+        /**
+         * CONTENT VALIDATION:
+         * Additional heuristic — if the response body contains common
+         * "not found" indicators despite returning 200 OK, discard it.
+         * This catches custom error pages that our fingerprinter might miss
+         * if they have per-request dynamic content.
+         */
+        if (status === 200 && this.looksLikeErrorPage(bodyStr)) {
+          this.log(`Soft-404 FP discarded: ${path} (content looks like error page)`, 'debug');
           return null;
         }
         
@@ -182,6 +341,47 @@ export class DirectoryScanner extends BaseScanner {
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Heuristic check: does this 200 OK response body look like a "Not Found" page?
+   * Many servers return custom error pages with 200 status codes.
+   * We check for common error-page language patterns.
+   */
+  looksLikeErrorPage(bodyStr) {
+    if (!bodyStr || bodyStr.length < 50) return false;
+    
+    const lowerBody = bodyStr.toLowerCase();
+    const errorIndicators = [
+      'page not found',
+      '404 not found',
+      'not found',
+      'does not exist',
+      'could not be found',
+      'no longer available',
+      'the page you requested',
+      'error 404',
+      'we couldn\'t find',
+      'nothing here',
+      'page doesn\'t exist',
+      'الصفحة غير موجودة' // Arabic "page not found"
+    ];
+
+    // Count how many error indicators appear. A single match could be coincidental
+    // (e.g., a page about handling 404 errors), so we require context.
+    let matchCount = 0;
+    for (const indicator of errorIndicators) {
+      if (lowerBody.includes(indicator)) matchCount++;
+    }
+
+    // If 2+ error indicators are found AND the page is relatively short,
+    // it's almost certainly a custom error page.
+    if (matchCount >= 2) return true;
+
+    // Single match + short page (< 5KB) is also suspicious
+    if (matchCount === 1 && bodyStr.length < 5000) return true;
+
+    return false;
   }
   
   categorizeDiscovery(result) {
