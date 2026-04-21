@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+code, pre, .font-mono {
+  font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00d4ff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff88;
+}
+
+/* Glowing effects */
+.glow-blue {
+  box-shadow: 0 0 10px #00d4ff, 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.glow-green {
+  box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.glow-red {
+  box-shadow: 0 0 10px #ff0055, 0 0 20px rgba(255, 0, 85, 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(45deg, #00d4ff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Matrix-like background effect */
+.matrix-bg {
+  background-image: 
+    radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%),
+    linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+}
+
+/* Scan animation overlay */
+@keyframes scanOverlay {
+  0% { transform: translateY(-100%); opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(100%); opacity: 0.5; }
+}
+
+.scan-animation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  animation: scanOverlay 2s linear infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+}
+
+/* Pulse animation for scanning */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pulse-scanning {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* Progress bar animation */
+@keyframes progressShine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.progress-shine {
+  background: linear-gradient(
+    90deg,
+    #00d4ff 0%,
+    #00ff88 25%,
+    #00d4ff 50%,
+    #00ff88 75%,
+    #00d4ff 100%
+  );
+  background-size: 200% 100%;
+  animation: progressShine 2s linear infinite;
+}
+
+/* Severity badges */
+.severity-critical {
+  background: linear-gradient(135deg, #ff0055, #cc0044);
+  color: white;
+}
+
+.severity-high {
+  background: linear-gradient(135deg, #ff6400, #cc5000);
+  color: white;
+}
+
+.severity-medium {
+  background: linear-gradient(135deg, #ffc800, #cca000);
+  color: #1a1a2e;
+}
+
+.severity-low {
+  background: linear-gradient(135deg, #00c8ff, #00a0cc);
+  color: #1a1a2e;
+}
+
+.severity-info {
+  background: linear-gradient(135deg, #969696, #787878);
+  color: white;
+}

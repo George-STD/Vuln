@@ -1,0 +1,1665 @@
+{
+  "id": "26ca3fc1-37c3-4d93-88eb-1919b2ce4785",
+  "url": "http://testphp.vulnweb.com",
+  "options": {},
+  "status": "completed",
+  "progress": 100,
+  "vulnerabilities": [
+    {
+      "type": "Missing Security Header",
+      "subType": "X-CONTENT-TYPE-OPTIONS",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"x-content-type-options\" not found in response",
+      "description": "X-Content-Type-Options header not set",
+      "remediation": "Set X-Content-Type-Options: nosniff",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 5,
+      "cwe": "CWE-16"
+    },
+    {
+      "type": "Missing Security Header",
+      "subType": "X-FRAME-OPTIONS",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"x-frame-options\" not found in response",
+      "description": "X-Frame-Options header not set",
+      "remediation": "Set X-Frame-Options: DENY or SAMEORIGIN",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 5,
+      "cwe": "CWE-1021"
+    },
+    {
+      "type": "Missing Security Header",
+      "subType": "CONTENT-SECURITY-POLICY",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"content-security-policy\" not found in response",
+      "description": "Content-Security-Policy header not set",
+      "remediation": "Implement a strict Content Security Policy",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 5,
+      "cwe": "CWE-16"
+    },
+    {
+      "type": "Missing Security Header",
+      "subType": "X-XSS-PROTECTION",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"x-xss-protection\" not found in response",
+      "description": "X-XSS-Protection header not set (legacy but still useful)",
+      "remediation": "Set X-XSS-Protection: 1; mode=block",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 3,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "Missing Security Header",
+      "subType": "REFERRER-POLICY",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"referrer-policy\" not found in response",
+      "description": "Referrer-Policy header not set",
+      "remediation": "Set Referrer-Policy: strict-origin-when-cross-origin",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 3,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Missing Security Header",
+      "subType": "PERMISSIONS-POLICY",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Header \"permissions-policy\" not found in response",
+      "description": "Permissions-Policy header not set",
+      "remediation": "Define a Permissions-Policy to control browser features",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://securityheaders.com/"
+      ],
+      "cvss": 3,
+      "cwe": "CWE-16"
+    },
+    {
+      "type": "Information Disclosure",
+      "subType": "Server Banner",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "server: nginx/1.19.0",
+      "description": "Server header exposes server technology",
+      "remediation": "Remove or obscure the Server header",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/"
+      ],
+      "cvss": 2,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Information Disclosure",
+      "subType": "Server Banner",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "x-powered-by: PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1",
+      "description": "X-Powered-By header exposes framework information",
+      "remediation": "Remove the X-Powered-By header",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/"
+      ],
+      "cvss": 2,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Insecure Transport",
+      "subType": "No HTTPS",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Site accessible over HTTP",
+      "description": "The application is served over unencrypted HTTP",
+      "remediation": "Enable HTTPS and redirect all HTTP traffic to HTTPS",
+      "references": [
+        "https://letsencrypt.org/",
+        "https://www.ssllabs.com/ssltest/"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-319"
+    },
+    {
+      "type": "Clickjacking",
+      "subType": "No Frame Protection",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com",
+      "evidence": "Missing X-Frame-Options and CSP frame-ancestors",
+      "description": "Page can be embedded in iframes on any domain, enabling clickjacking attacks.",
+      "remediation": "Add X-Frame-Options: DENY or SAMEORIGIN header. Better yet, use CSP frame-ancestors directive.",
+      "references": [
+        "https://owasp.org/www-community/attacks/Clickjacking",
+        "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options",
+        "https://portswigger.net/web-security/clickjacking"
+      ],
+      "cvss": 4.3,
+      "cwe": "CWE-1021"
+    },
+    {
+      "type": "Information Disclosure",
+      "subType": "Admin Panel Exposure",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/admin",
+      "evidence": "Admin panel found at /admin",
+      "description": "Administrative interface is accessible. Should be restricted to authorized users.",
+      "remediation": "Restrict access to admin panels via IP whitelisting or VPN.",
+      "references": [
+        "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces"
+      ],
+      "cvss": 5,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Information Disclosure",
+      "subType": "Admin Panel Exposure",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/admin/",
+      "evidence": "Admin panel found at /admin/",
+      "description": "Administrative interface is accessible. Should be restricted to authorized users.",
+      "remediation": "Restrict access to admin panels via IP whitelisting or VPN.",
+      "references": [
+        "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces"
+      ],
+      "cvss": 5,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Directory/File Discovery",
+      "subType": "Path Accessible",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com/.idea/",
+      "evidence": "Path accessible: /.idea/ (Status: 200)",
+      "description": "Discovered accessible path: /.idea/",
+      "remediation": "Review if this path should be publicly accessible.",
+      "references": [],
+      "cvss": 1,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Directory/File Discovery",
+      "subType": "Path Accessible",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com/crossdomain.xml",
+      "evidence": "Path accessible: /crossdomain.xml (Status: 200)",
+      "description": "Discovered accessible path: /crossdomain.xml",
+      "remediation": "Review if this path should be publicly accessible.",
+      "references": [],
+      "cvss": 1,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Directory/File Discovery",
+      "subType": "Path Accessible",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com/clientaccesspolicy.xml",
+      "evidence": "Path accessible: /clientaccesspolicy.xml (Status: 200)",
+      "description": "Discovered accessible path: /clientaccesspolicy.xml",
+      "remediation": "Review if this path should be publicly accessible.",
+      "references": [],
+      "cvss": 1,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "Directory/File Discovery",
+      "subType": "Path Accessible",
+      "severity": "info",
+      "url": "http://testphp.vulnweb.com/images/",
+      "evidence": "Path accessible: /images/ (Status: 200)",
+      "description": "Discovered accessible path: /images/",
+      "remediation": "Review if this path should be publicly accessible.",
+      "references": [],
+      "cvss": 1,
+      "cwe": "CWE-200"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "<script/src=\"data:text/javascript,alert(1)\">",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "<script>alert(\"XSS\")</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "searchFor",
+      "payload": "'><script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "'><script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "searchFor",
+      "payload": "\"><script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "<script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "<scr<script>ipt>alert(1)</scr</script>ipt>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "searchFor",
+      "payload": "data:text/html,<script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "<script>alert(\"XSS\")</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "searchFor",
+      "payload": "<script/src=\"data:text/javascript,alert(1)\">",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "XSS",
+      "subType": "potential",
+      "severity": "low",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "'><script>alert(1)</script>",
+      "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+      "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+      "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+      "references": [
+        "https://portswigger.net/web-security/cross-site-scripting",
+        "https://owasp.org/www-community/attacks/xss/"
+      ],
+      "cvss": 6.1,
+      "cwe": "CWE-79"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "SSRF",
+      "subType": "Potential SSRF (Timing)",
+      "severity": "medium",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "parameter": "goButton",
+      "payload": "http://127.0.0.1",
+      "evidence": "Fast response (0ms) suggests server may have connected locally",
+      "description": "SSRF vulnerability in form field \"goButton\"",
+      "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+      "references": [
+        "https://portswigger.net/web-security/ssrf"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-918"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com/search.php?test=query",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    },
+    {
+      "type": "XXE",
+      "subType": "Potential Blind XXE",
+      "severity": "high",
+      "url": "http://testphp.vulnweb.com",
+      "method": "POST",
+      "payload": "Blind XXE with external DTD",
+      "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+      "description": "The application may be vulnerable to blind XXE attacks.",
+      "remediation": "Disable external entity and DTD processing.",
+      "references": [
+        "https://portswigger.net/web-security/xxe/blind"
+      ],
+      "cvss": 7.5,
+      "cwe": "CWE-611"
+    }
+  ],
+  "startTime": "2026-01-15T07:48:24.459Z",
+  "results": {
+    "target": "http://testphp.vulnweb.com",
+    "startTime": "2026-01-15T07:48:24.459Z",
+    "endTime": "2026-01-15T07:49:15.207Z",
+    "vulnerabilities": [
+      {
+        "type": "Missing Security Header",
+        "subType": "X-CONTENT-TYPE-OPTIONS",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"x-content-type-options\" not found in response",
+        "description": "X-Content-Type-Options header not set",
+        "remediation": "Set X-Content-Type-Options: nosniff",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 5,
+        "cwe": "CWE-16"
+      },
+      {
+        "type": "Missing Security Header",
+        "subType": "X-FRAME-OPTIONS",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"x-frame-options\" not found in response",
+        "description": "X-Frame-Options header not set",
+        "remediation": "Set X-Frame-Options: DENY or SAMEORIGIN",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 5,
+        "cwe": "CWE-1021"
+      },
+      {
+        "type": "Missing Security Header",
+        "subType": "CONTENT-SECURITY-POLICY",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"content-security-policy\" not found in response",
+        "description": "Content-Security-Policy header not set",
+        "remediation": "Implement a strict Content Security Policy",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 5,
+        "cwe": "CWE-16"
+      },
+      {
+        "type": "Missing Security Header",
+        "subType": "X-XSS-PROTECTION",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"x-xss-protection\" not found in response",
+        "description": "X-XSS-Protection header not set (legacy but still useful)",
+        "remediation": "Set X-XSS-Protection: 1; mode=block",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 3,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "Missing Security Header",
+        "subType": "REFERRER-POLICY",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"referrer-policy\" not found in response",
+        "description": "Referrer-Policy header not set",
+        "remediation": "Set Referrer-Policy: strict-origin-when-cross-origin",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 3,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Missing Security Header",
+        "subType": "PERMISSIONS-POLICY",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Header \"permissions-policy\" not found in response",
+        "description": "Permissions-Policy header not set",
+        "remediation": "Define a Permissions-Policy to control browser features",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/",
+          "https://securityheaders.com/"
+        ],
+        "cvss": 3,
+        "cwe": "CWE-16"
+      },
+      {
+        "type": "Information Disclosure",
+        "subType": "Server Banner",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "server: nginx/1.19.0",
+        "description": "Server header exposes server technology",
+        "remediation": "Remove or obscure the Server header",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/"
+        ],
+        "cvss": 2,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Information Disclosure",
+        "subType": "Server Banner",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "x-powered-by: PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1",
+        "description": "X-Powered-By header exposes framework information",
+        "remediation": "Remove the X-Powered-By header",
+        "references": [
+          "https://owasp.org/www-project-secure-headers/"
+        ],
+        "cvss": 2,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Insecure Transport",
+        "subType": "No HTTPS",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Site accessible over HTTP",
+        "description": "The application is served over unencrypted HTTP",
+        "remediation": "Enable HTTPS and redirect all HTTP traffic to HTTPS",
+        "references": [
+          "https://letsencrypt.org/",
+          "https://www.ssllabs.com/ssltest/"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-319"
+      },
+      {
+        "type": "Clickjacking",
+        "subType": "No Frame Protection",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com",
+        "evidence": "Missing X-Frame-Options and CSP frame-ancestors",
+        "description": "Page can be embedded in iframes on any domain, enabling clickjacking attacks.",
+        "remediation": "Add X-Frame-Options: DENY or SAMEORIGIN header. Better yet, use CSP frame-ancestors directive.",
+        "references": [
+          "https://owasp.org/www-community/attacks/Clickjacking",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options",
+          "https://portswigger.net/web-security/clickjacking"
+        ],
+        "cvss": 4.3,
+        "cwe": "CWE-1021"
+      },
+      {
+        "type": "Information Disclosure",
+        "subType": "Admin Panel Exposure",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/admin",
+        "evidence": "Admin panel found at /admin",
+        "description": "Administrative interface is accessible. Should be restricted to authorized users.",
+        "remediation": "Restrict access to admin panels via IP whitelisting or VPN.",
+        "references": [
+          "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces"
+        ],
+        "cvss": 5,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Information Disclosure",
+        "subType": "Admin Panel Exposure",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/admin/",
+        "evidence": "Admin panel found at /admin/",
+        "description": "Administrative interface is accessible. Should be restricted to authorized users.",
+        "remediation": "Restrict access to admin panels via IP whitelisting or VPN.",
+        "references": [
+          "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces"
+        ],
+        "cvss": 5,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Directory/File Discovery",
+        "subType": "Path Accessible",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com/.idea/",
+        "evidence": "Path accessible: /.idea/ (Status: 200)",
+        "description": "Discovered accessible path: /.idea/",
+        "remediation": "Review if this path should be publicly accessible.",
+        "references": [],
+        "cvss": 1,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Directory/File Discovery",
+        "subType": "Path Accessible",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com/crossdomain.xml",
+        "evidence": "Path accessible: /crossdomain.xml (Status: 200)",
+        "description": "Discovered accessible path: /crossdomain.xml",
+        "remediation": "Review if this path should be publicly accessible.",
+        "references": [],
+        "cvss": 1,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Directory/File Discovery",
+        "subType": "Path Accessible",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com/clientaccesspolicy.xml",
+        "evidence": "Path accessible: /clientaccesspolicy.xml (Status: 200)",
+        "description": "Discovered accessible path: /clientaccesspolicy.xml",
+        "remediation": "Review if this path should be publicly accessible.",
+        "references": [],
+        "cvss": 1,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "Directory/File Discovery",
+        "subType": "Path Accessible",
+        "severity": "info",
+        "url": "http://testphp.vulnweb.com/images/",
+        "evidence": "Path accessible: /images/ (Status: 200)",
+        "description": "Discovered accessible path: /images/",
+        "remediation": "Review if this path should be publicly accessible.",
+        "references": [],
+        "cvss": 1,
+        "cwe": "CWE-200"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "<script/src=\"data:text/javascript,alert(1)\">",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "<script>alert(\"XSS\")</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "searchFor",
+        "payload": "'><script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "'><script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "searchFor",
+        "payload": "\"><script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "<script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "<scr<script>ipt>alert(1)</scr</script>ipt>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "searchFor",
+        "payload": "data:text/html,<script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "<script>alert(\"XSS\")</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "searchFor",
+        "payload": "<script/src=\"data:text/javascript,alert(1)\">",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"searchFor\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "XSS",
+        "subType": "potential",
+        "severity": "low",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "'><script>alert(1)</script>",
+        "evidence": "... headers headers -->\n<!-- InstanceEndEditable -->\n<script language=\"JavaScript\" type=\"text/JavaScript\">\n<!-...",
+        "description": "Cross-Site Scripting (XSS) vulnerability found in form field \"goButton\"",
+        "remediation": "Implement proper input validation and output encoding. Use Content-Security-Policy headers.",
+        "references": [
+          "https://portswigger.net/web-security/cross-site-scripting",
+          "https://owasp.org/www-community/attacks/xss/"
+        ],
+        "cvss": 6.1,
+        "cwe": "CWE-79"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "SSRF",
+        "subType": "Potential SSRF (Timing)",
+        "severity": "medium",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "parameter": "goButton",
+        "payload": "http://127.0.0.1",
+        "evidence": "Fast response (0ms) suggests server may have connected locally",
+        "description": "SSRF vulnerability in form field \"goButton\"",
+        "remediation": "Implement URL validation with allowlists. Block internal IP ranges.",
+        "references": [
+          "https://portswigger.net/web-security/ssrf"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-918"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com/search.php?test=query",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      },
+      {
+        "type": "XXE",
+        "subType": "Potential Blind XXE",
+        "severity": "high",
+        "url": "http://testphp.vulnweb.com",
+        "method": "POST",
+        "payload": "Blind XXE with external DTD",
+        "evidence": "Error message indicates XXE processing: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n\"http://www.w3.org/TR/html4/loose.dtd",
+        "description": "The application may be vulnerable to blind XXE attacks.",
+        "remediation": "Disable external entity and DTD processing.",
+        "references": [
+          "https://portswigger.net/web-security/xxe/blind"
+        ],
+        "cvss": 7.5,
+        "cwe": "CWE-611"
+      }
+    ],
+    "info": {
+      "domain": "testphp.vulnweb.com",
+      "protocol": "http:",
+      "port": 80,
+      "headers": {
+        "server": "nginx/1.19.0",
+        "date": "Thu, 15 Jan 2026 07:47:55 GMT",
+        "content-type": "text/html; charset=UTF-8",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "x-powered-by": "PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1"
+      },
+      "server": "nginx/1.19.0",
+      "poweredBy": "PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1",
+      "technologies": {
+        "frameworks": [],
+        "cms": [],
+        "servers": [
+          "nginx/1.19.0",
+          "Nginx"
+        ],
+        "languages": [
+          "PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1",
+          "PHP"
+        ],
+        "libraries": [],
+        "analytics": [],
+        "cdn": [],
+        "security": [],
+        "other": []
+      }
+    },
+    "summary": {
+      "totalVulnerabilities": 50,
+      "critical": 0,
+      "high": 17,
+      "medium": 13,
+      "low": 14,
+      "info": 6,
+      "urlsCrawled": 8,
+      "formsFound": 8,
+      "parametersFound": 5,
+      "endpointsFound": 0,
+      "scanDuration": "50s",
+      "wafDetected": false,
+      "cdnDetected": false,
+      "riskScore": 100
+    },
+    "wafInfo": null,
+    "robotsInfo": null,
+    "screenshots": []
+  },
+  "endTime": "2026-01-15T07:49:15.207Z"
+}

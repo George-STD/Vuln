@@ -1,0 +1,656 @@
+{"level":"info","message":"Client connected: gXCGYLeLO8Qbc6MjAAAB","timestamp":"2026-01-14 22:11:15"}
+{"level":"info","message":"Client connected: RdBn4SykpOEIicI8AAAD","timestamp":"2026-01-14 22:11:16"}
+{"level":"info","message":"Client disconnected: gXCGYLeLO8Qbc6MjAAAB","timestamp":"2026-01-14 22:11:20"}
+{"level":"info","message":"Client connected: z9WeAto7ap26YbZMAAAF","timestamp":"2026-01-14 22:11:20"}
+{"level":"info","message":"Client disconnected: RdBn4SykpOEIicI8AAAD","timestamp":"2026-01-14 22:11:20"}
+{"level":"info","message":"Client connected: Gd0-00IoGdhTsV0UAAAH","timestamp":"2026-01-14 22:11:20"}
+{"level":"info","message":"Client disconnected: Gd0-00IoGdhTsV0UAAAH","timestamp":"2026-01-14 22:12:26"}
+{"level":"info","message":"Client connected: 0r3iBC6WSv8suwAvAAAK","timestamp":"2026-01-14 22:12:27"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://0a8900a304566e4981a49801000e00b5.web-security-academy.net/","scanId":"default","timestamp":"2026-01-14 22:13:57"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-14 22:13:57"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-14 22:13:59"}
+{"level":"info","message":"Crawled 11 URLs, found 0 forms","scanId":"default","timestamp":"2026-01-14 22:14:03"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-14 22:14:03"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-14 22:14:03"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-14 22:14:03"}
+{"level":"warn","message":"⚠️ Found 6 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:14:04"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-14 22:14:04"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-14 22:14:09"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-14 22:14:22"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-14 22:14:23"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-14 22:14:24"}
+{"level":"warn","message":"⚠️ Found 1 Sensitive Data Exposure vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:14:30"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-14 22:14:30"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-14 22:15:09"}
+{"level":"warn","message":"⚠️ Found 4 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:16:17"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-14 22:16:17"}
+{"level":"warn","message":"⚠️ Found 3 SQL Injection vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:17:17"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-14 22:17:17"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-14 22:17:17"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-14 22:17:26"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:17:29"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-14 22:17:29"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-14 22:17:30"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-14 22:17:30"}
+{"level":"info","message":"Scan stopped by user","scanId":"default","timestamp":"2026-01-14 22:17:35"}
+{"level":"warn","message":"⚠️ Found 6 IDOR vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:17:42"}
+{"level":"info","message":"Client disconnected: 0r3iBC6WSv8suwAvAAAK","timestamp":"2026-01-14 22:17:57"}
+{"level":"info","message":"Client connected: tQQv1xAJeZTlWK8JAAAN","timestamp":"2026-01-14 22:17:59"}
+{"level":"info","message":"Client disconnected: tQQv1xAJeZTlWK8JAAAN","timestamp":"2026-01-14 22:22:32"}
+{"level":"info","message":"Client connected: __UGIUTKXXuN1s5-AAAQ","timestamp":"2026-01-14 22:22:33"}
+{"level":"info","message":"Client disconnected: __UGIUTKXXuN1s5-AAAQ","timestamp":"2026-01-14 22:24:29"}
+{"level":"info","message":"Client connected: PbMheCPwgtPz7Q2aAAAT","timestamp":"2026-01-14 22:24:29"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://google.com","scanId":"default","timestamp":"2026-01-14 22:24:34"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-14 22:24:34"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-14 22:24:35"}
+{"level":"info","message":"Crawled 11 URLs, found 12 forms","scanId":"default","timestamp":"2026-01-14 22:24:39"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-14 22:24:39"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-14 22:24:40"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-14 22:24:40"}
+{"level":"warn","message":"⚠️ Found 6 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:24:40"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-14 22:24:40"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-14 22:24:44"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-14 22:24:55"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:24:56"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-14 22:24:56"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-14 22:24:57"}
+{"level":"warn","message":"⚠️ Found 1 Sensitive Data Exposure vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:24:58"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-14 22:24:58"}
+{"level":"info","message":"Scan stopped by user","scanId":"default","timestamp":"2026-01-14 22:25:00"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:25:06"}
+{"level":"info","message":"Client disconnected: z9WeAto7ap26YbZMAAAF","timestamp":"2026-01-14 22:31:29"}
+{"level":"info","message":"Client connected: VbMDqiaCSujpHyg2AAAB","timestamp":"2026-01-14 22:32:09"}
+{"level":"info","message":"Client connected: ctavGECL1mZhNYoxAAAD","timestamp":"2026-01-14 22:32:12"}
+{"level":"info","message":"Client disconnected: VbMDqiaCSujpHyg2AAAB","timestamp":"2026-01-14 22:32:14"}
+{"level":"info","message":"Client connected: rsNDQvkWJs_sOsXtAAAG","timestamp":"2026-01-14 22:32:15"}
+{"level":"info","message":"Client connected: JiTsVymyojbnuTEKAAAB","timestamp":"2026-01-14 22:34:09"}
+{"level":"info","message":"Client connected: zClbsa5g5g2adIrZAAAD","timestamp":"2026-01-14 22:34:09"}
+{"level":"info","message":"Client disconnected: zClbsa5g5g2adIrZAAAD","timestamp":"2026-01-14 22:35:11"}
+{"level":"info","message":"Client connected: SLU97HrM7Fsp1HCcAAAG","timestamp":"2026-01-14 22:35:11"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-14 22:35:13"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-14 22:35:13"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-14 22:35:15"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-14 22:35:17"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-14 22:35:19"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-14 22:35:23"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:35:23"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-14 22:35:23"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-14 22:35:23"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-14 22:35:25"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:35:34"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-14 22:35:34"}
+{"level":"warn","message":"⚠️ Found 9 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:35:47"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-14 22:35:47"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-14 22:35:55"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-14 22:35:55"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-14 22:35:55"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:35:57"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-14 22:35:57"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:36:12"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-14 22:36:12"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-14 22:36:13"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-14 22:36:13"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-14 22:36:21"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-14 22:36:21"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-14 22:36:21"}
+{"level":"info","message":"Client disconnected: SLU97HrM7Fsp1HCcAAAG","timestamp":"2026-01-14 22:36:57"}
+{"level":"info","message":"Client connected: 5jroD9sEADe0j1wDAAAJ","timestamp":"2026-01-14 22:36:58"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-14 22:38:00"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-14 22:38:00"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-14 22:38:01"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-14 22:38:02"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-14 22:38:04"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-14 22:38:07"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:07"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-14 22:38:07"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-14 22:38:07"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-14 22:38:09"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:14"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-14 22:38:14"}
+{"level":"warn","message":"⚠️ Found 12 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:25"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-14 22:38:25"}
+{"level":"warn","message":"⚠️ Found 7 SQL Injection vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:29"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-14 22:38:29"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-14 22:38:29"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-14 22:38:29"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:31"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-14 22:38:31"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:38:45"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-14 22:38:45"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-14 22:38:46"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-14 22:38:46"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-14 22:38:54"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-14 22:38:54"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-14 22:38:54"}
+{"level":"info","message":"Client disconnected: 5jroD9sEADe0j1wDAAAJ","timestamp":"2026-01-14 22:39:19"}
+{"level":"info","message":"Client connected: 8-cUFjMHvTB7IquqAAAM","timestamp":"2026-01-14 22:39:20"}
+{"level":"info","message":"Client disconnected: 8-cUFjMHvTB7IquqAAAM","timestamp":"2026-01-14 22:40:12"}
+{"level":"info","message":"Client connected: YJ7NL6wpCiPRwLPmAAAP","timestamp":"2026-01-14 22:40:12"}
+{"level":"info","message":"Client disconnected: JiTsVymyojbnuTEKAAAB","timestamp":"2026-01-14 22:40:24"}
+{"level":"info","message":"Client connected: mgGsL0vofzDOIzvkAAAB","timestamp":"2026-01-14 22:45:35"}
+{"level":"info","message":"Client disconnected: mgGsL0vofzDOIzvkAAAB","timestamp":"2026-01-14 22:46:00"}
+{"level":"info","message":"Client connected: 42KVjF2HKkmNmVtrAAAE","timestamp":"2026-01-14 22:46:02"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-14 22:46:26"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-14 22:46:26"}
+{"level":"info","message":"Client subscribed to scan: 1bc4da7d-1fa9-4191-ad16-97c1c2f4e0ed","timestamp":"2026-01-14 22:46:26"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-14 22:46:27"}
+{"level":"info","message":"Crawled 8 URLs, found 1 forms","scanId":"default","timestamp":"2026-01-14 22:46:28"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-14 22:46:28"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-14 22:46:28"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-14 22:46:28"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:46:29"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-14 22:46:29"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-14 22:46:30"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-14 22:46:34"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:46:34"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-14 22:46:34"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-14 22:46:34"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-14 22:46:36"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:46:44"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-14 22:46:44"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-14 22:46:47"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-14 22:46:50"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-14 22:46:50"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-14 22:46:50"}
+{"level":"warn","message":"⚠️ Found 1 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:46:50"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-14 22:46:50"}
+{"level":"warn","message":"⚠️ Found 4 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-14 22:46:55"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-14 22:46:55"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-14 22:46:55"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-14 22:46:55"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-14 22:46:56"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-14 22:46:57"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-14 22:46:57"}
+{"level":"info","message":"Client connected: cX24YNGD4yw0BfuoAAAB","timestamp":"2026-01-14 22:57:48"}
+{"level":"info","message":"Client connected: j9x820XXRrRDaiDfAAAE","timestamp":"2026-01-14 22:57:53"}
+{"level":"info","message":"Client disconnected: cX24YNGD4yw0BfuoAAAB","timestamp":"2026-01-14 22:57:55"}
+{"level":"info","message":"Client connected: qWlK6NY24LktyzmEAAAH","timestamp":"2026-01-14 22:57:56"}
+{"level":"info","message":"Client disconnected: j9x820XXRrRDaiDfAAAE","timestamp":"2026-01-14 22:59:15"}
+{"level":"info","message":"Client disconnected: qWlK6NY24LktyzmEAAAH","timestamp":"2026-01-14 23:09:34"}
+{"level":"info","message":"Client connected: jxMvtfe9tOlNQzR7AAAK","timestamp":"2026-01-14 23:15:57"}
+{"level":"info","message":"Client disconnected: jxMvtfe9tOlNQzR7AAAK","timestamp":"2026-01-14 23:16:46"}
+{"level":"info","message":"Client connected: HWEU9uEzg9LcSdoXAAAN","timestamp":"2026-01-14 23:16:47"}
+{"level":"info","message":"Client disconnected: HWEU9uEzg9LcSdoXAAAN","timestamp":"2026-01-14 23:17:30"}
+{"level":"info","message":"Client connected: frUW4vMqagxxfvt5AAAC","timestamp":"2026-01-14 23:19:50"}
+{"level":"info","message":"Client connected: PO1uHJa2r7smuPHmAAAF","timestamp":"2026-01-14 23:19:51"}
+{"level":"info","message":"Client disconnected: frUW4vMqagxxfvt5AAAC","timestamp":"2026-01-14 23:27:53"}
+{"level":"info","message":"Client disconnected: PO1uHJa2r7smuPHmAAAF","timestamp":"2026-01-14 23:34:49"}
+{"level":"info","message":"Client connected: lo7YSLS4c7WkCCukAAAI","timestamp":"2026-01-14 23:34:49"}
+{"level":"info","message":"Client disconnected: lo7YSLS4c7WkCCukAAAI","timestamp":"2026-01-14 23:34:51"}
+{"level":"info","message":"Client connected: v9x_57sQ4xdGcLc-AAAK","timestamp":"2026-01-14 23:34:51"}
+{"level":"info","message":"Client disconnected: v9x_57sQ4xdGcLc-AAAK","timestamp":"2026-01-14 23:34:55"}
+{"level":"info","message":"Client connected: NMUQZEoH35eTEF0SAAAM","timestamp":"2026-01-14 23:34:55"}
+{"level":"info","message":"Client disconnected: NMUQZEoH35eTEF0SAAAM","timestamp":"2026-01-14 23:34:57"}
+{"level":"info","message":"Client connected: pmOy449520mmkoEVAAAO","timestamp":"2026-01-14 23:34:57"}
+{"level":"info","message":"Client disconnected: pmOy449520mmkoEVAAAO","timestamp":"2026-01-14 23:35:00"}
+{"level":"info","message":"Client connected: xrJWAmBRNerI2iJoAAAQ","timestamp":"2026-01-14 23:35:00"}
+{"level":"info","message":"Client disconnected: xrJWAmBRNerI2iJoAAAQ","timestamp":"2026-01-14 23:35:04"}
+{"level":"info","message":"Client connected: OaR-z4uUiItFg9HhAAAS","timestamp":"2026-01-14 23:35:04"}
+{"level":"info","message":"Client disconnected: OaR-z4uUiItFg9HhAAAS","timestamp":"2026-01-14 23:35:06"}
+{"level":"info","message":"Client connected: j0SZqcJ1q0o3u5rvAAAU","timestamp":"2026-01-14 23:35:06"}
+{"level":"info","message":"Client disconnected: j0SZqcJ1q0o3u5rvAAAU","timestamp":"2026-01-14 23:35:08"}
+{"level":"info","message":"Client connected: ZRQu_01DekIy9mx_AAAW","timestamp":"2026-01-14 23:35:08"}
+{"level":"info","message":"Client disconnected: ZRQu_01DekIy9mx_AAAW","timestamp":"2026-01-14 23:41:05"}
+{"level":"info","message":"Client connected: BdyqsLPtuNu_X35YAAAC","timestamp":"2026-01-14 23:42:15"}
+{"level":"info","message":"Client disconnected: BdyqsLPtuNu_X35YAAAC","timestamp":"2026-01-14 23:43:55"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:31:25"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:31:25"}
+{"level":"info","message":"Client connected: NXdYPDEiZLRcKbUoAAAC","timestamp":"2026-01-15 09:31:31"}
+{"level":"info","message":"Client connected: 7tRplmw19TK2jI12AAAF","timestamp":"2026-01-15 09:32:57"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:35:30"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:35:30"}
+{"level":"info","message":"Client connected: DQLFkWj0CreXz5fvAAAB","timestamp":"2026-01-15 09:35:31"}
+{"level":"info","message":"Client disconnected: DQLFkWj0CreXz5fvAAAB","timestamp":"2026-01-15 09:35:32"}
+{"level":"info","message":"Client connected: jvQFE9ubTOl2wju3AAAE","timestamp":"2026-01-15 09:35:33"}
+{"level":"info","message":"Client disconnected: jvQFE9ubTOl2wju3AAAE","timestamp":"2026-01-15 09:35:35"}
+{"level":"info","message":"Client connected: Ist4BWwGL82xKYNZAAAH","timestamp":"2026-01-15 09:35:35"}
+{"level":"info","message":"Client disconnected: Ist4BWwGL82xKYNZAAAH","timestamp":"2026-01-15 09:35:37"}
+{"level":"info","message":"Client connected: WfjHE4HJdFvB9M1wAAAK","timestamp":"2026-01-15 09:35:38"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:40:02"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:40:02"}
+{"level":"info","message":"Client connected: nfToOlV4o-FmB9ocAAAB","timestamp":"2026-01-15 09:40:02"}
+{"level":"info","message":"Client disconnected: nfToOlV4o-FmB9ocAAAB","timestamp":"2026-01-15 09:40:51"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:41:07"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:41:07"}
+{"level":"info","message":"Client connected: 0DeJ3bs1MtZqwCQvAAAC","timestamp":"2026-01-15 09:41:15"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-15 09:41:21"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 09:41:21"}
+{"level":"info","message":"Client subscribed to scan: c8f6cf91-b4fc-40aa-b958-31c816794d65","timestamp":"2026-01-15 09:41:21"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 09:41:22"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 09:41:22"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 09:41:22"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 09:41:23"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 09:41:24"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 09:41:27"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:41:28"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 09:41:28"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 09:41:28"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 09:41:29"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:41:35"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 09:41:35"}
+{"level":"warn","message":"⚠️ Found 11 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:41:47"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 09:41:47"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 09:41:54"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 09:41:54"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 09:41:54"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:41:56"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 09:41:56"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:42:08"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 09:42:08"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 09:42:08"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 09:42:08"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 09:42:16"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 09:42:17"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 09:42:17"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:43:47"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:43:47"}
+{"level":"info","message":"Client connected: gPvBEIDGGbBDzU0-AAAC","timestamp":"2026-01-15 09:43:50"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-15 09:43:56"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 09:43:56"}
+{"level":"info","message":"Client subscribed to scan: b8db185d-282e-4507-a8cb-5606d1c1007f","timestamp":"2026-01-15 09:43:56"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 09:43:57"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 09:43:57"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 09:43:57"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 09:43:58"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 09:44:00"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 09:44:02"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:44:02"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 09:44:02"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 09:44:02"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 09:44:04"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:44:10"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 09:44:10"}
+{"level":"warn","message":"⚠️ Found 10 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:44:21"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 09:44:21"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 09:44:28"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 09:44:28"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 09:44:28"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:44:30"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 09:44:30"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:44:41"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 09:44:41"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 09:44:42"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 09:44:42"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 09:44:50"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 09:44:51"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 09:44:51"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 09:47:27"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 09:47:27"}
+{"level":"info","message":"Client connected: hu0fh0-aljzjL709AAAC","timestamp":"2026-01-15 09:48:08"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-15 09:48:24"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 09:48:24"}
+{"level":"info","message":"Client subscribed to scan: 26ca3fc1-37c3-4d93-88eb-1919b2ce4785","timestamp":"2026-01-15 09:48:24"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 09:48:24"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 09:48:24"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 09:48:24"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-15 09:48:25"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 09:48:25"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 09:48:26"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 09:48:26"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:48:26"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 09:48:26"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 09:48:27"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 09:48:30"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:48:30"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 09:48:30"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 09:48:30"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 09:48:32"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:48:37"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 09:48:37"}
+{"level":"warn","message":"⚠️ Found 11 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:48:47"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 09:48:47"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 09:48:53"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 09:48:53"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 09:48:53"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:48:55"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 09:48:55"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 09:49:06"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 09:49:06"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 09:49:07"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 09:49:07"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 09:49:14"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 09:49:15"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 09:49:15"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 10:44:13"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 10:44:13"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-15 10:44:13"}
+{"level":"info","message":"Client connected: a8PdZ4XWN7IDL0qAAAAB","timestamp":"2026-01-15 10:44:15"}
+{"level":"info","message":"Client disconnected: a8PdZ4XWN7IDL0qAAAAB","timestamp":"2026-01-15 10:44:23"}
+{"level":"info","message":"Client connected: UBbYf5ziKGJVSKobAAAE","timestamp":"2026-01-15 10:44:26"}
+{"level":"info","message":"Client disconnected: UBbYf5ziKGJVSKobAAAE","timestamp":"2026-01-15 10:46:26"}
+{"level":"info","message":"Client connected: livc58fzSmmsjLMvAAAH","timestamp":"2026-01-15 10:46:27"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 16:08:11"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 16:08:11"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-15 16:08:11"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-15 16:08:56"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-15 16:08:56"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 16:09:08"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 16:09:08"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-15 16:09:08"}
+{"level":"info","message":"Client connected: AnAnT_YpIAJcpbEeAAAC","timestamp":"2026-01-15 16:11:36"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-15 16:11:39"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 16:12:02"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 16:12:02"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-15 16:12:02"}
+{"level":"info","message":"Client connected: gcdymQH8wHbsKBQ8AAAB","timestamp":"2026-01-15 16:12:02"}
+{"level":"info","message":"Client connected: W7KBqWTgou-bhnPSAAAE","timestamp":"2026-01-15 16:12:07"}
+{"level":"info","message":"Client disconnected: gcdymQH8wHbsKBQ8AAAB","timestamp":"2026-01-15 16:12:07"}
+{"level":"info","message":"Client connected: mmANC8bpbs4KvU1jAAAH","timestamp":"2026-01-15 16:12:07"}
+{"level":"info","message":"Client disconnected: mmANC8bpbs4KvU1jAAAH","timestamp":"2026-01-15 16:12:08"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://0a940079038ba030ceaeb20600130098.web-security-academy.net/","scanId":"default","timestamp":"2026-01-15 16:13:00"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 16:13:00"}
+{"level":"info","message":"Client subscribed to scan: b0640dd3-143b-49c0-9ff9-0e25e62e405e","timestamp":"2026-01-15 16:13:00"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 16:13:01"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 16:13:01"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 16:13:01"}
+{"level":"info","message":"Crawled 11 URLs, found 0 forms","scanId":"default","timestamp":"2026-01-15 16:13:02"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 16:13:02"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 16:13:02"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 16:13:02"}
+{"level":"warn","message":"⚠️ Found 6 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:13:03"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 16:13:03"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 16:13:05"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 16:13:10"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 16:13:11"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 16:13:11"}
+{"level":"warn","message":"⚠️ Found 1 Sensitive Data Exposure vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:13:14"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 16:13:14"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 16:13:22"}
+{"level":"warn","message":"⚠️ Found 4 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:13:47"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 16:13:47"}
+{"level":"warn","message":"⚠️ Found 3 SQL Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:14:14"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 16:14:14"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 16:14:14"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 16:14:17"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:14:19"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 16:14:19"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 16:14:19"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 16:14:20"}
+{"level":"warn","message":"⚠️ Found 6 IDOR vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:14:26"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 16:14:26"}
+{"level":"warn","message":"⚠️ Found 4 Open Redirect vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:14:27"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 16:14:27"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 16:14:28"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 16:14:28"}
+{"level":"info","message":"Client disconnected: W7KBqWTgou-bhnPSAAAE","timestamp":"2026-01-15 16:29:07"}
+{"level":"info","message":"Client connected: b5DC42MMsw72tOG1AAAK","timestamp":"2026-01-15 16:29:08"}
+{"level":"info","message":"Client disconnected: b5DC42MMsw72tOG1AAAK","timestamp":"2026-01-15 16:29:19"}
+{"level":"info","message":"Client connected: plNz3OlRhFEcVywSAAAM","timestamp":"2026-01-15 16:29:19"}
+{"level":"info","message":"Client disconnected: plNz3OlRhFEcVywSAAAM","timestamp":"2026-01-15 16:29:21"}
+{"level":"info","message":"Client connected: vT927Hpf3nzKvO7ZAAAO","timestamp":"2026-01-15 16:29:21"}
+{"level":"info","message":"Client disconnected: vT927Hpf3nzKvO7ZAAAO","timestamp":"2026-01-15 16:29:24"}
+{"level":"info","message":"Client connected: sR8ZsQrjm2IOJHRyAAAQ","timestamp":"2026-01-15 16:29:24"}
+{"level":"info","message":"Client disconnected: sR8ZsQrjm2IOJHRyAAAQ","timestamp":"2026-01-15 16:30:16"}
+{"level":"info","message":"Client connected: WbgV_s8RWH6qn5gyAAAT","timestamp":"2026-01-15 16:30:18"}
+{"level":"info","message":"Client disconnected: WbgV_s8RWH6qn5gyAAAT","timestamp":"2026-01-15 16:40:28"}
+{"level":"info","message":"Client connected: gMdkQvjJa_4FfIsfAAAW","timestamp":"2026-01-15 16:40:29"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://0a650022042123ab80198a0b00070026.web-security-academy.net/","scanId":"default","timestamp":"2026-01-15 16:40:44"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 16:40:44"}
+{"level":"info","message":"Client subscribed to scan: 91a8bb46-6519-43ef-9574-b8646741b98f","timestamp":"2026-01-15 16:40:44"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 16:40:45"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 16:40:45"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 16:40:45"}
+{"level":"info","message":"Crawled 11 URLs, found 0 forms","scanId":"default","timestamp":"2026-01-15 16:40:46"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 16:40:46"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 16:40:46"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 16:40:46"}
+{"level":"warn","message":"⚠️ Found 6 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:40:47"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 16:40:47"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 16:40:49"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 16:40:54"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 16:40:55"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 16:40:55"}
+{"level":"warn","message":"⚠️ Found 1 Sensitive Data Exposure vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:40:57"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 16:40:57"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 16:41:06"}
+{"level":"warn","message":"⚠️ Found 4 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:41:30"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 16:41:30"}
+{"level":"warn","message":"⚠️ Found 3 SQL Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:41:56"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 16:41:56"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 16:41:56"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 16:41:59"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:42:01"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 16:42:01"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 16:42:01"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 16:42:02"}
+{"level":"warn","message":"⚠️ Found 6 IDOR vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:42:08"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 16:42:08"}
+{"level":"warn","message":"⚠️ Found 4 Open Redirect vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:42:10"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 16:42:10"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 16:42:11"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 16:42:11"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-15 16:42:39"}
+{"level":"info","message":"Client disconnected: gMdkQvjJa_4FfIsfAAAW","timestamp":"2026-01-15 16:42:46"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-15 16:43:00"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-15 16:43:00"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-15 16:43:00"}
+{"level":"info","message":"Client connected: fXzxHu0bM1PHWstwAAAC","timestamp":"2026-01-15 16:43:07"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://0a650022042123ab80198a0b00070026.web-security-academy.net/","scanId":"default","timestamp":"2026-01-15 16:43:14"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-15 16:43:14"}
+{"level":"info","message":"Client subscribed to scan: 72aeb129-4ee0-4af7-bb45-13f432139c20","timestamp":"2026-01-15 16:43:14"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-15 16:43:15"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-15 16:43:15"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-15 16:43:15"}
+{"level":"info","message":"Crawled 11 URLs, found 0 forms","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"warn","message":"⚠️ Found 6 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-15 16:43:17"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-15 16:43:19"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-15 16:43:25"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-15 16:43:25"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-15 16:43:26"}
+{"level":"warn","message":"⚠️ Found 1 Sensitive Data Exposure vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:43:28"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-15 16:43:28"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-15 16:43:37"}
+{"level":"warn","message":"⚠️ Found 4 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:44:03"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-15 16:44:03"}
+{"level":"warn","message":"⚠️ Found 4 SQL Injection vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:44:32"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-15 16:44:32"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-15 16:44:32"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-15 16:44:36"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:44:37"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-15 16:44:37"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-15 16:44:38"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-15 16:44:38"}
+{"level":"warn","message":"⚠️ Found 6 IDOR vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:44:44"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-15 16:44:44"}
+{"level":"warn","message":"⚠️ Found 4 Open Redirect vulnerabilities","scanId":"default","timestamp":"2026-01-15 16:44:45"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-15 16:44:45"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-15 16:44:46"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-15 16:44:46"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-15 16:48:56"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-18 16:28:33"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-18 16:28:33"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-18 16:28:33"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-18 16:28:33"}
+{"level":"info","message":"Client connected: jUKsf34aKdVNC4LGAAAC","timestamp":"2026-01-18 16:30:37"}
+{"level":"info","message":"Client disconnected: jUKsf34aKdVNC4LGAAAC","timestamp":"2026-01-18 16:51:02"}
+{"level":"info","message":"Client connected: OH4Rtx-NFFSePjuwAAAF","timestamp":"2026-01-18 16:51:03"}
+{"level":"info","message":"Client disconnected: OH4Rtx-NFFSePjuwAAAF","timestamp":"2026-01-18 17:05:06"}
+{"level":"info","message":"Client connected: IcdObLRfb07LGkuSAAAI","timestamp":"2026-01-18 17:05:07"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-18 17:49:19"}
+{"level":"info","message":"Client disconnected: IcdObLRfb07LGkuSAAAI","timestamp":"2026-01-18 17:49:45"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-21 14:04:18"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-21 14:04:18"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-21 14:04:18"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-21 14:04:18"}
+{"level":"info","message":"Client connected: FKD5_CBIptTEUErtAAAC","timestamp":"2026-01-21 14:04:23"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-21 14:06:12"}
+{"level":"info","message":"Client disconnected: FKD5_CBIptTEUErtAAAC","timestamp":"2026-01-21 14:06:18"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-21 14:10:52"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-21 14:38:42"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-21 14:38:42"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-21 14:38:42"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-21 14:38:42"}
+{"level":"info","message":"Client connected: KrXXIBeZDqaIphGtAAAC","timestamp":"2026-01-21 14:38:51"}
+{"level":"info","message":"Client disconnected: KrXXIBeZDqaIphGtAAAC","timestamp":"2026-01-21 14:41:33"}
+{"level":"info","message":"Client connected: 6C6oZVtWFjILCQz3AAAF","timestamp":"2026-01-21 14:41:35"}
+{"level":"info","message":"Client disconnected: 6C6oZVtWFjILCQz3AAAF","timestamp":"2026-01-21 14:42:10"}
+{"level":"info","message":"Client connected: qS_8n3XW_23d2WoSAAAI","timestamp":"2026-01-21 14:42:10"}
+{"level":"info","message":"Client disconnected: qS_8n3XW_23d2WoSAAAI","timestamp":"2026-01-21 14:42:39"}
+{"level":"info","message":"Client connected: NSQcz7uG9MBMRqFLAAAL","timestamp":"2026-01-21 14:42:40"}
+{"level":"info","message":"Client disconnected: NSQcz7uG9MBMRqFLAAAL","timestamp":"2026-01-21 14:43:15"}
+{"level":"info","message":"Client connected: x_pg0kmXDU46hH4UAAAO","timestamp":"2026-01-21 14:43:16"}
+{"level":"info","message":"Client connected: SkvUBVoLZse-owpSAAAR","timestamp":"2026-01-21 14:43:25"}
+{"level":"info","message":"Client disconnected: SkvUBVoLZse-owpSAAAR","timestamp":"2026-01-21 14:43:46"}
+{"level":"info","message":"Client disconnected: x_pg0kmXDU46hH4UAAAO","timestamp":"2026-01-21 14:43:58"}
+{"level":"info","message":"Client connected: x2ZE6PvhCOYKFa9fAAAU","timestamp":"2026-01-21 14:43:58"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-21 14:56:31"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-28 21:13:41"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-28 21:13:41"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-28 21:13:41"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-28 21:13:41"}
+{"level":"info","message":"Client connected: ypl6LZV6hlCB79bOAAAC","timestamp":"2026-01-28 21:14:30"}
+{"level":"info","message":"Client disconnected: ypl6LZV6hlCB79bOAAAC","timestamp":"2026-01-28 21:14:32"}
+{"level":"info","message":"Client connected: DPibkj2n5_tT1NhmAAAF","timestamp":"2026-01-28 21:14:32"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-28 21:38:33"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-28 21:38:33"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-28 21:38:33"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-28 21:38:33"}
+{"level":"info","message":"Client connected: 7XQrzgSDHqabqvgTAAAB","timestamp":"2026-01-28 21:38:33"}
+{"level":"info","message":"Client disconnected: 7XQrzgSDHqabqvgTAAAB","timestamp":"2026-01-28 21:38:37"}
+{"level":"info","message":"Client connected: WiipHZI20Mbl0VimAAAE","timestamp":"2026-01-28 21:38:39"}
+{"level":"info","message":"Client disconnected: WiipHZI20Mbl0VimAAAE","timestamp":"2026-01-28 21:39:51"}
+{"level":"info","message":"Client connected: NAM6i37gaqHIsnNGAAAH","timestamp":"2026-01-28 21:39:51"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-01-28 21:43:36"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-01-28 21:43:36"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-01-28 21:43:36"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-01-28 21:43:36"}
+{"level":"info","message":"Client connected: EeATwgSC767U9OdSAAAB","timestamp":"2026-01-28 21:43:39"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: http://testphp.vulnweb.com","scanId":"default","timestamp":"2026-01-28 21:44:51"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-01-28 21:44:51"}
+{"level":"info","message":"Client subscribed to scan: 36d3dee1-2952-4c89-93ae-7d55853e9482","timestamp":"2026-01-28 21:44:51"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-01-28 21:44:51"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-01-28 21:44:51"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-01-28 21:44:51"}
+{"level":"info","message":"Crawled 8 URLs, found 8 forms","scanId":"default","timestamp":"2026-01-28 21:44:52"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-01-28 21:44:52"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-01-28 21:44:53"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-01-28 21:44:53"}
+{"level":"warn","message":"⚠️ Found 9 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:44:53"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-01-28 21:44:53"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-01-28 21:44:54"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-01-28 21:44:57"}
+{"level":"warn","message":"⚠️ Found 1 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:44:57"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-01-28 21:44:57"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-01-28 21:44:57"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-01-28 21:44:59"}
+{"level":"warn","message":"⚠️ Found 6 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:45:04"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-01-28 21:45:04"}
+{"level":"warn","message":"⚠️ Found 12 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:45:14"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-01-28 21:45:14"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-01-28 21:45:21"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-01-28 21:45:21"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-01-28 21:45:21"}
+{"level":"warn","message":"⚠️ Found 7 SSRF vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:45:22"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-01-28 21:45:22"}
+{"level":"warn","message":"⚠️ Found 16 XXE Injection vulnerabilities","scanId":"default","timestamp":"2026-01-28 21:45:33"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-01-28 21:45:33"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-01-28 21:45:34"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-01-28 21:45:34"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-01-28 21:45:42"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-01-28 21:45:42"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-01-28 21:45:42"}
+{"level":"info","message":"Client disconnected: EeATwgSC767U9OdSAAAB","timestamp":"2026-01-28 21:46:08"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-01-28 21:46:11"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-28 21:46:11"}
+{"level":"info","message":"Loaded 0 saved schedules","scanId":"scheduler","timestamp":"2026-04-21 15:31:52"}
+{"level":"info","message":"Scan scheduler initialized","scanId":"scheduler","timestamp":"2026-04-21 15:31:52"}
+{"level":"info","message":"Enterprise modules initialized","timestamp":"2026-04-21 15:31:52"}
+{"level":"info","message":"Bug Bounty safety system ready","timestamp":"2026-04-21 15:31:52"}
+{"level":"info","message":"Client connected: gczi33tXq4hpZIJjAAAC","timestamp":"2026-04-21 15:32:04"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://www.foryo.me/","scanId":"default","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"Client subscribed to scan: 30856122-3174-448d-a3da-8d6ed844f22e","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"🚀 Starting vulnerability scan for: https://www.foryo.me/","scanId":"default","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"📡 Phase 1: Reconnaissance & Information Gathering","scanId":"default","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"Client subscribed to scan: 0e5ac770-0ddc-415b-9495-33a294345808","timestamp":"2026-04-21 15:32:11"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"info","message":"🛡️ Detecting WAF/CDN...","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"warn","message":"Reconnaissance error: this.wafDetector.detect is not a function","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"info","message":"🕷️ Phase 2: Crawling & Endpoint Discovery","scanId":"default","timestamp":"2026-04-21 15:32:14"}
+{"level":"info","message":"Crawled 11 URLs, found 25 forms","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"Crawled 11 URLs, found 25 forms","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔍 Phase 3: Technology Stack Detection","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"⚔️ Phase 4: Active Vulnerability Scanning","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for Security Headers...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"warn","message":"⚠️ Found 4 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"warn","message":"⚠️ Found 4 Security Headers vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for CORS Misconfiguration...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"warn","message":"⚠️ Found 1 CORS Misconfiguration vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"warn","message":"⚠️ Found 1 CORS Misconfiguration vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for Cookie Security...","scanId":"default","timestamp":"2026-04-21 15:32:16"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for Clickjacking...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"warn","message":"⚠️ Found 2 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"warn","message":"⚠️ Found 2 Clickjacking vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for SSL/TLS Issues...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for Sensitive Data Exposure...","scanId":"default","timestamp":"2026-04-21 15:32:18"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-04-21 15:32:19"}
+{"level":"info","message":"🔎 Scanning for Directory Enumeration...","scanId":"default","timestamp":"2026-04-21 15:32:19"}
+{"level":"warn","message":"⚠️ Found 123 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:25"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-04-21 15:32:25"}
+{"level":"warn","message":"⚠️ Found 123 Directory Enumeration vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:25"}
+{"level":"info","message":"🔎 Scanning for XSS (Cross-Site Scripting)...","scanId":"default","timestamp":"2026-04-21 15:32:25"}
+{"level":"warn","message":"⚠️ Found 3 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:27"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-04-21 15:32:27"}
+{"level":"warn","message":"⚠️ Found 3 XSS (Cross-Site Scripting) vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:27"}
+{"level":"info","message":"🔎 Scanning for SQL Injection...","scanId":"default","timestamp":"2026-04-21 15:32:27"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-04-21 15:32:30"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-04-21 15:32:30"}
+{"level":"info","message":"🔎 Scanning for LFI/RFI...","scanId":"default","timestamp":"2026-04-21 15:32:30"}
+{"level":"info","message":"🔎 Scanning for Remote Code Execution...","scanId":"default","timestamp":"2026-04-21 15:32:30"}
+{"level":"warn","message":"⚠️ Found 4 Remote Code Execution vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"warn","message":"⚠️ Found 4 Remote Code Execution vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for SSRF...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"warn","message":"⚠️ Found 4 SSRF vulnerabilities","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for XXE Injection...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for CSRF...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for IDOR...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for Open Redirect...","scanId":"default","timestamp":"2026-04-21 15:32:31"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-04-21 15:32:33"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-04-21 15:32:33"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-04-21 15:32:33"}
+{"level":"info","message":"🔎 Scanning for Authentication Bypass...","scanId":"default","timestamp":"2026-04-21 15:32:33"}
+{"level":"info","message":"📊 Phase 5: Generating Results Summary","scanId":"default","timestamp":"2026-04-21 15:32:34"}
+{"level":"info","message":"✅ Scan completed successfully!","scanId":"default","timestamp":"2026-04-21 15:32:34"}
+{"level":"info","message":"Client disconnected: gczi33tXq4hpZIJjAAAC","timestamp":"2026-04-21 15:39:35"}
+{"level":"info","message":"Client connected: vsN66NmcpfDZkEhDAAAF","timestamp":"2026-04-21 15:39:35"}
+{"level":"info","message":"SIGINT received, shutting down gracefully...","timestamp":"2026-04-21 15:39:50"}

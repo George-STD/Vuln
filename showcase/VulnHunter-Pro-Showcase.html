@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VulnHunter Pro - Professional Web Development Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
+            padding: 40px;
+            page-break-after: always;
+        }
+
+        @media print {
+            .page {
+                margin: 0;
+                padding: 30px;
+            }
+        }
+
+        /* Cover Page */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: calc(297mm - 80px);
+        }
+
+        .logo-container {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 30px 50px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(14, 165, 233, 0.3);
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo span {
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .cover h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cover .subtitle {
+            font-size: 20px;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .badge.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+        }
+
+        .badge.accent {
+            background: linear-gradient(135deg, var(--accent), #059669);
+            border: none;
+        }
+
+        .developer-info {
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .developer-info h3 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .developer-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Section Styles */
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title .icon {
+            font-size: 32px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .feature-card .icon {
+            font-size: 24px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tech-item .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .tech-item .name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .tech-item .desc {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Table Styles */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .styled-table th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .styled-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+
+        .styled-table tr:hover {
+            background: rgba(14, 165, 233, 0.05);
+        }
+
+        .severity-critical {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .severity-high {
+            color: #f97316;
+            font-weight: 600;
+        }
+
+        .severity-medium {
+            color: #eab308;
+            font-weight: 600;
+        }
+
+        .severity-low {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        /* Screenshot Placeholder */
+        .screenshot-container {
+            background: linear-gradient(135deg, var(--dark-light), var(--dark));
+            border: 2px solid rgba(14, 165, 233, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screenshot-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 13px 13px 0 0;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+        }
+
+        .screenshot-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .screenshot-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* List Styles */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent), #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-section h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--dark);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .page-footer {
+            margin-top: auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Skill Tags */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .skill-tag {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(16, 185, 129, 0.1));
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Two Column Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Cover -->
+    <div class="page">
+        <div class="cover">
+            <div class="logo-container">
+                <div class="logo">🔐 Vuln<span>Hunter</span> Pro</div>
+            </div>
+            
+            <h1>Enterprise-Grade Web Application</h1>
+            <p class="subtitle">
+                A comprehensive, full-stack security vulnerability scanner built with modern web technologies. 
+                Featuring real-time updates, enterprise integrations, and professional-grade UI/UX.
+            </p>
+            
+            <div class="badge-row">
+                <span class="badge primary">Full-Stack Development</span>
+                <span class="badge accent">React.js + Node.js</span>
+                <span class="badge">Real-time WebSocket</span>
+                <span class="badge">Enterprise Ready</span>
+                <span class="badge">Responsive Design</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">21+</div>
+                    <div class="label">Security Modules</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">15K+</div>
+                    <div class="label">Lines of Code</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">50+</div>
+                    <div class="label">UI Components</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">2</div>
+                    <div class="label">Languages (EN/AR)</div>
+                </div>
+            </div>
+
+            <div class="developer-info">
+                <h3>🎯 Professional Web Development Services</h3>
+                <p>Custom web applications built with cutting-edge technologies.<br>
+                From concept to deployment - complete full-stack solutions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Technical Overview -->
+    <div class="page">
+        <h2 class="section-title">
+            <span class="icon">⚡</span>
+            Technology Stack
+        </h2>
+
+        <div class="tech-grid">
+            <div class="tech-item">
+                <div class="icon">⚛️</div>
+                <div class="name">React.js 18</div>
+                <div class="desc">Modern UI with Hooks & Context</div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🟢</div>
+                <div class="name">Node.js</div>
+                <div class="desc">High-performance Backend</div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🔌</div>
+                <div class="name">Socket.IO</div>
+                <div class="desc">Real-time Communication</div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🎨</div>
+                <div class="name">Tailwind CSS</div>
+                <div class="desc">Modern Utility-first Styling</div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">⚡</div>
+                <div class="name">Vite</div>
+                <div class="desc">Lightning-fast Build Tool</div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🌐</div>
+                <div class="name">Express.js</div>
+                <div class="desc">RESTful API Server</div>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 40px;">
+            <span class="icon">💻</span>
+            Skills Demonstrated
+        </h2>
+
+        <div class="skill-tags">
+            <span class="skill-tag">React.js</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Express.js</span>
+            <span class="skill-tag">Socket.IO</span>
+            <span class="skill-tag">REST API</span>
+            <span class="skill-tag">Tailwind CSS</span>
+            <span class="skill-tag">Framer Motion</span>
+            <span class="skill-tag">Context API</span>
+            <span class="skill-tag">WebSocket</span>
+            <span class="skill-tag">i18n (Bilingual)</span>
+            <span class="skill-tag">Responsive Design</span>
+            <span class="skill-tag">Dark Mode UI</span>
+            <span class="skill-tag">Data Visualization</span>
+            <span class="skill-tag">File Export (PDF/JSON/SARIF)</span>
+            <span class="skill-tag">Authentication</span>
+            <span class="skill-tag">RBAC</span>
+            <span class="skill-tag">Multi-tenancy</span>
+            <span class="skill-tag">API Integration</span>
+            <span class="skill-tag">Headless Browser</span>
+            <span class="skill-tag">Puppeteer</span>
+        </div>
+
+        <div class="highlight-box">
+            <h4>🏆 Project Highlights</h4>
+            <ul class="feature-list">
+                <li>Enterprise-grade architecture with modular, scalable design</li>
+                <li>Real-time updates using WebSocket for live scan progress</li>
+                <li>Complete bilingual support (English/Arabic) with RTL layout</li>
+                <li>Professional UI/UX with smooth animations and transitions</li>
+                <li>Comprehensive error handling and user feedback</li>
+                <li>Multiple export formats (PDF, HTML, JSON, SARIF, Markdown)</li>
+            </ul>
+        </div>
+
+        <div class="page-footer">
+            <span>VulnHunter Pro - Portfolio Showcase</span>
+            <span>Page 2 of 5</span>
+        </div>
+    </div>
+
+    <!-- Page 3: Features Overview -->
+    <div class="page">
+        <h2 class="section-title">
+            <span class="icon">✨</span>
+            Key Features
+        </h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3><span class="icon">🔍</span> Smart Scanning Engine</h3>
+                <p>21+ specialized vulnerability detection modules with advanced payloads. Supports XSS, SQLi, CSRF, SSRF, LFI, RCE, and more.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">📊</span> Real-time Dashboard</h3>
+                <p>Live progress tracking with WebSocket. Instant vulnerability notifications and dynamic statistics updates.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">📱</span> Responsive Design</h3>
+                <p>Fully responsive interface that works flawlessly on desktop, tablet, and mobile devices.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🌐</span> Bilingual Support</h3>
+                <p>Complete English and Arabic localization with automatic RTL layout switching.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">📄</span> Professional Reports</h3>
+                <p>Export detailed reports in PDF, HTML, JSON, SARIF, and Markdown formats.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">⏰</span> Scheduled Scans</h3>
+                <p>Set up automated recurring scans with flexible scheduling options.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🔗</span> Third-party Integrations</h3>
+                <p>Connect with Jira, GitHub, and Slack for seamless workflow automation.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🔒</span> Enterprise Security</h3>
+                <p>RBAC, SSO support, audit logging, and AES-256 encrypted credential vault.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 30px;">
+            <span class="icon">🛡️</span>
+            Security Modules
+        </h2>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Description</th>
+                    <th>Severity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>XSS Scanner</strong></td>
+                    <td>Reflected, Stored, DOM-based Cross-Site Scripting</td>
+                    <td class="severity-high">High</td>
+                </tr>
+                <tr>
+                    <td><strong>SQL Injection</strong></td>
+                    <td>Error-based, Boolean, Time-based SQLi</td>
+                    <td class="severity-critical">Critical</td>
+                </tr>
+                <tr>
+                    <td><strong>SSRF Scanner</strong></td>
+                    <td>Server-Side Request Forgery detection</td>
+                    <td class="severity-high">High</td>
+                </tr>
+                <tr>
+                    <td><strong>Auth Bypass</strong></td>
+                    <td>Authentication & Authorization bypass</td>
+                    <td class="severity-critical">Critical</td>
+                </tr>
+                <tr>
+                    <td><strong>LFI/Path Traversal</strong></td>
+                    <td>Local File Inclusion vulnerabilities</td>
+                    <td class="severity-high">High</td>
+                </tr>
+                <tr>
+                    <td><strong>+ 16 More Modules</strong></td>
+                    <td>CORS, CSRF, XXE, IDOR, RCE, Headers, Cookies...</td>
+                    <td class="severity-medium">Various</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="page-footer">
+            <span>VulnHunter Pro - Portfolio Showcase</span>
+            <span>Page 3 of 5</span>
+        </div>
+    </div>
+
+    <!-- Page 4: UI Screenshots -->
+    <div class="page">
+        <h2 class="section-title">
+            <span class="icon">🎨</span>
+            User Interface Design
+        </h2>
+
+        <div class="screenshot-container" style="min-height: 250px;">
+            <div class="screenshot-label">📸 Main Dashboard</div>
+            <div class="screenshot-title">Modern Dark Theme with Gradient Accents</div>
+            <p style="color: var(--gray); font-size: 14px; text-align: center; margin-top: 15px;">
+                Clean, professional interface with intuitive navigation.<br>
+                Features scan form, real-time progress, and vulnerability list.
+            </p>
+        </div>
+
+        <div class="two-columns">
+            <div class="screenshot-container" style="min-height: 180px;">
+                <div class="screenshot-label">📊 Scan Progress</div>
+                <div class="screenshot-title">Real-time Updates</div>
+                <p style="color: var(--gray); font-size: 12px; margin-top: 10px;">
+                    Live progress bar with phase indicators
+                </p>
+            </div>
+            <div class="screenshot-container" style="min-height: 180px;">
+                <div class="screenshot-label">📋 Vulnerability Details</div>
+                <div class="screenshot-title">Detailed Findings</div>
+                <p style="color: var(--gray); font-size: 12px; margin-top: 10px;">
+                    Expandable cards with evidence & remediation
+                </p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px; color: var(--primary);">🎯 UI/UX Highlights</h3>
+        
+        <ul class="feature-list">
+            <li>Cyberpunk-inspired dark theme with neon accent colors</li>
+            <li>Smooth animations using Framer Motion library</li>
+            <li>Consistent design system with reusable components</li>
+            <li>Accessibility-focused with proper contrast ratios</li>
+            <li>Interactive elements with hover states and transitions</li>
+            <li>Toast notifications for user feedback</li>
+            <li>Modal dialogs for confirmations and settings</li>
+            <li>Responsive grid layouts adapting to all screen sizes</li>
+        </ul>
+
+        <div class="page-footer">
+            <span>VulnHunter Pro - Portfolio Showcase</span>
+            <span>Page 4 of 5</span>
+        </div>
+    </div>
+
+    <!-- Page 5: Enterprise Features & CTA -->
+    <div class="page">
+        <h2 class="section-title">
+            <span class="icon">🏢</span>
+            Enterprise Features
+        </h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3><span class="icon">👥</span> Multi-tenancy</h3>
+                <p>Isolated workspaces with tenant-specific configurations. Perfect for SaaS applications.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🔐</span> Role-Based Access</h3>
+                <p>6 predefined roles: Super Admin, Admin, Manager, Analyst, Viewer, API Only.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">📝</span> Audit Logging</h3>
+                <p>Complete activity tracking with 50+ event types for compliance requirements.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🔑</span> SSO Integration</h3>
+                <p>SAML 2.0 and OpenID Connect support for enterprise identity providers.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🔒</span> Credential Vault</h3>
+                <p>AES-256-GCM encrypted storage for API keys and sensitive credentials.</p>
+            </div>
+            <div class="feature-card">
+                <h3><span class="icon">🧩</span> Plugin System</h3>
+                <p>Extensible architecture allowing custom scanner modules.</p>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 30px;">
+            <h4>📋 What I Can Build For You</h4>
+            <div class="two-columns" style="margin-top: 15px;">
+                <div>
+                    <ul class="feature-list">
+                        <li>Custom Web Applications</li>
+                        <li>SaaS Platforms</li>
+                        <li>Admin Dashboards</li>
+                        <li>E-commerce Solutions</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="feature-list">
+                        <li>API Development</li>
+                        <li>Real-time Applications</li>
+                        <li>CRM/ERP Systems</li>
+                        <li>Mobile-responsive Sites</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>🚀 Ready to Build Your Project?</h2>
+            <p>Let's turn your ideas into reality with clean code and modern technologies.</p>
+            <div class="badge-row" style="margin-top: 20px;">
+                <span class="badge" style="background: rgba(0,0,0,0.2);">✅ Fast Delivery</span>
+                <span class="badge" style="background: rgba(0,0,0,0.2);">✅ Clean Code</span>
+                <span class="badge" style="background: rgba(0,0,0,0.2);">✅ 24/7 Support</span>
+                <span class="badge" style="background: rgba(0,0,0,0.2);">✅ Unlimited Revisions</span>
+            </div>
+        </div>
+
+        <div class="page-footer" style="margin-top: 40px;">
+            <span>VulnHunter Pro - Portfolio Showcase</span>
+            <span>Page 5 of 5</span>
+        </div>
+    </div>
+
+    <!-- Instructions for converting to PDF -->
+    <div style="text-align: center; padding: 40px; background: #1e293b; color: #64748b; font-size: 14px;">
+        <p><strong>📄 To convert this to PDF:</strong></p>
+        <p>Press <kbd style="background: #334155; padding: 5px 10px; border-radius: 5px;">Ctrl + P</kbd> (or <kbd style="background: #334155; padding: 5px 10px; border-radius: 5px;">Cmd + P</kbd> on Mac)</p>
+        <p>Select "Save as PDF" as the destination</p>
+        <p>Set margins to "None" for best results</p>
+    </div>
+</body>
+</html>

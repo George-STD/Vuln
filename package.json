@@ -1,0 +1,27 @@
+{
+  "name": "vulnhunter-pro",
+  "version": "1.0.0",
+  "description": "Advanced Web Vulnerability Scanner - Bug Bounty Tool",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node index.js",
+    "client": "cd client && npm run dev",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "security",
+    "vulnerability-scanner",
+    "bug-bounty",
+    "penetration-testing",
+    "xss",
+    "sqli",
+    "csrf"
+  ],
+  "author": "VulnHunter",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

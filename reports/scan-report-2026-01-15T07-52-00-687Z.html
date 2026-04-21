@@ -1,0 +1,2840 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير فحص الثغرات | Vulnerability Scan Report</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(45deg, #00d4ff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    
+    .target-url {
+      font-size: 1.2em;
+      color: #00d4ff;
+      word-break: break-all;
+    }
+    
+    .scan-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .info-card {
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+    
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .summary-card {
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 2px solid;
+    }
+    
+    .summary-card.critical {
+      background: rgba(255, 0, 0, 0.1);
+      border-color: #ff0000;
+    }
+    
+    .summary-card.high {
+      background: rgba(255, 100, 0, 0.1);
+      border-color: #ff6400;
+    }
+    
+    .summary-card.medium {
+      background: rgba(255, 200, 0, 0.1);
+      border-color: #ffc800;
+    }
+    
+    .summary-card.low {
+      background: rgba(0, 200, 255, 0.1);
+      border-color: #00c8ff;
+    }
+    
+    .summary-card.info {
+      background: rgba(150, 150, 150, 0.1);
+      border-color: #969696;
+    }
+    
+    .summary-card h3 {
+      font-size: 2.5em;
+      margin-bottom: 5px;
+    }
+    
+    .vulnerability {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .vuln-header {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .vuln-header.critical { background: rgba(255, 0, 0, 0.2); }
+    .vuln-header.high { background: rgba(255, 100, 0, 0.2); }
+    .vuln-header.medium { background: rgba(255, 200, 0, 0.2); }
+    .vuln-header.low { background: rgba(0, 200, 255, 0.2); }
+    .vuln-header.info { background: rgba(150, 150, 150, 0.2); }
+    
+    .vuln-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    
+    .severity-badge {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+    
+    .severity-badge.critical { background: #ff0000; color: white; }
+    .severity-badge.high { background: #ff6400; color: white; }
+    .severity-badge.medium { background: #ffc800; color: black; }
+    .severity-badge.low { background: #00c8ff; color: black; }
+    .severity-badge.info { background: #969696; color: white; }
+    
+    .vuln-body {
+      padding: 20px;
+    }
+    
+    .vuln-section {
+      margin-bottom: 15px;
+    }
+    
+    .vuln-section h4 {
+      color: #00d4ff;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      text-transform: uppercase;
+    }
+    
+    .vuln-section p, .vuln-section code {
+      color: #ccc;
+    }
+    
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 15px;
+      border-radius: 5px;
+      display: block;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    
+    .references a {
+      color: #00d4ff;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .references a:hover {
+      text-decoration: underline;
+    }
+    
+    .cvss-score {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    .cvss-critical { background: #ff0000; }
+    .cvss-high { background: #ff6400; }
+    .cvss-medium { background: #ffc800; color: black; }
+    .cvss-low { background: #00c8ff; color: black; }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      color: #666;
+    }
+    
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      
+      .vulnerability {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔐 تقرير فحص الثغرات</h1>
+      <div class="target-url"></div>
+      <div class="scan-info">
+        <div class="info-card">
+          <strong>تاريخ الفحص:</strong><br>
+          ١٥‏/١‏/٢٠٢٦، ٩:٤٨:٢٤ ص
+        </div>
+        <div class="info-card">
+          <strong>مدة الفحص:</strong><br>
+          N/A
+        </div>
+        <div class="info-card">
+          <strong>الصفحات المفحوصة:</strong><br>
+          0
+        </div>
+        <div class="info-card">
+          <strong>النماذج المفحوصة:</strong><br>
+          0
+        </div>
+      </div>
+    </header>
+    
+    <section class="summary">
+      <div class="summary-card critical">
+        <h3>0</h3>
+        <p>حرجة | Critical</p>
+      </div>
+      <div class="summary-card high">
+        <h3>17</h3>
+        <p>عالية | High</p>
+      </div>
+      <div class="summary-card medium">
+        <h3>13</h3>
+        <p>متوسطة | Medium</p>
+      </div>
+      <div class="summary-card low">
+        <h3>14</h3>
+        <p>منخفضة | Low</p>
+      </div>
+      <div class="summary-card info">
+        <h3>6</h3>
+        <p>معلومات | Info</p>
+      </div>
+    </section>
+    
+    <section class="vulnerabilities">
+      
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">1. Insecure Transport - No HTTPS</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application is served over unencrypted HTTP</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Site accessible over HTTP</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Enable HTTPS and redirect all HTTP traffic to HTTPS</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-319
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://letsencrypt.org/" target="_blank">https://letsencrypt.org/</a><a href="https://www.ssllabs.com/ssltest/" target="_blank">https://www.ssllabs.com/ssltest/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">2. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">3. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">4. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">5. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">6. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">7. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">8. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">9. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">10. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">11. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">12. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">13. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">14. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">15. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">16. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header high">
+          <span class="vuln-title">17. XXE - Potential Blind XXE</span>
+          <span class="severity-badge high">high</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>The application may be vulnerable to blind XXE attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Error message indicates XXE processing: &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/html4/loose.dtd</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>Blind XXE with external DTD</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Disable external entity and DTD processing.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-611
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/xxe/blind" target="_blank">https://portswigger.net/web-security/xxe/blind</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">18. Missing Security Header - X-CONTENT-TYPE-OPTIONS</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>X-Content-Type-Options header not set</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;x-content-type-options&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Set X-Content-Type-Options: nosniff</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">5</span>
+             | CWE-16
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">19. Missing Security Header - X-FRAME-OPTIONS</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>X-Frame-Options header not set</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;x-frame-options&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Set X-Frame-Options: DENY or SAMEORIGIN</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">5</span>
+             | CWE-1021
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">20. Missing Security Header - CONTENT-SECURITY-POLICY</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Content-Security-Policy header not set</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;content-security-policy&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement a strict Content Security Policy</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">5</span>
+             | CWE-16
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">21. Clickjacking - No Frame Protection</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Page can be embedded in iframes on any domain, enabling clickjacking attacks.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Missing X-Frame-Options and CSP frame-ancestors</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Add X-Frame-Options: DENY or SAMEORIGIN header. Better yet, use CSP frame-ancestors directive.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">4.3</span>
+             | CWE-1021
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-community/attacks/Clickjacking" target="_blank">https://owasp.org/www-community/attacks/Clickjacking</a><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options" target="_blank">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</a><a href="https://portswigger.net/web-security/clickjacking" target="_blank">https://portswigger.net/web-security/clickjacking</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">22. Information Disclosure - Admin Panel Exposure</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/admin</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Administrative interface is accessible. Should be restricted to authorized users.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Admin panel found at /admin</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Restrict access to admin panels via IP whitelisting or VPN.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">5</span>
+             | CWE-200
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces" target="_blank">https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">23. Information Disclosure - Admin Panel Exposure</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/admin/</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Administrative interface is accessible. Should be restricted to authorized users.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Admin panel found at /admin/</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Restrict access to admin panels via IP whitelisting or VPN.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">5</span>
+             | CWE-200
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces" target="_blank">https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/05-Enumerate_Infrastructure_and_Application_Admin_Interfaces</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">24. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">25. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">26. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">27. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">28. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">29. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header medium">
+          <span class="vuln-title">30. SSRF - Potential SSRF (Timing)</span>
+          <span class="severity-badge medium">medium</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>SSRF vulnerability in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Fast response (0ms) suggests server may have connected locally</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>http://127.0.0.1</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement URL validation with allowlists. Block internal IP ranges.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-high">7.5</span>
+             | CWE-918
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/ssrf" target="_blank">https://portswigger.net/web-security/ssrf</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">31. Missing Security Header - X-XSS-PROTECTION</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>X-XSS-Protection header not set (legacy but still useful)</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;x-xss-protection&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Set X-XSS-Protection: 1; mode=block</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">3</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">32. Missing Security Header - REFERRER-POLICY</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Referrer-Policy header not set</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;referrer-policy&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Set Referrer-Policy: strict-origin-when-cross-origin</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">3</span>
+             | CWE-200
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">33. Missing Security Header - PERMISSIONS-POLICY</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Permissions-Policy header not set</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Header &quot;permissions-policy&quot; not found in response</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Define a Permissions-Policy to control browser features</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">3</span>
+             | CWE-16
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a><a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">34. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;script/src=&quot;data:text/javascript,alert(1)&quot;&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">35. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">36. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;searchFor&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&#039;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">37. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&#039;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">38. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;searchFor&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">39. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">40. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/scr&lt;/script&gt;ipt&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">41. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;searchFor&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">42. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">43. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;searchFor&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&lt;script/src=&quot;data:text/javascript,alert(1)&quot;&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header low">
+          <span class="vuln-title">44. XSS - potential</span>
+          <span class="severity-badge low">low</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/search.php?test=query</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Cross-Site Scripting (XSS) vulnerability found in form field &quot;goButton&quot;</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>... headers headers --&gt;
+&lt;!-- InstanceEndEditable --&gt;
+&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;&gt;
+&lt;!-...</code>
+          </div>
+          
+          
+          
+          <div class="vuln-section">
+            <h4>💉 الحمولة | Payload</h4>
+            <code>&#039;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Implement proper input validation and output encoding. Use Content-Security-Policy headers.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-medium">6.1</span>
+             | CWE-79
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">https://portswigger.net/web-security/cross-site-scripting</a><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">https://owasp.org/www-community/attacks/xss/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">45. Information Disclosure - Server Banner</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Server header exposes server technology</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>server: nginx/1.19.0</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Remove or obscure the Server header</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">2</span>
+             | CWE-200
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">46. Information Disclosure - Server Banner</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>X-Powered-By header exposes framework information</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>x-powered-by: PHP/5.6.40-38+ubuntu20.04.1+deb.sury.org+1</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Remove the X-Powered-By header</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">2</span>
+             | CWE-200
+          </div>
+          
+          
+          
+          <div class="vuln-section references">
+            <h4>📚 المراجع | References</h4>
+            <a href="https://owasp.org/www-project-secure-headers/" target="_blank">https://owasp.org/www-project-secure-headers/</a>
+          </div>
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">47. Directory/File Discovery - Path Accessible</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/.idea/</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Discovered accessible path: /.idea/</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Path accessible: /.idea/ (Status: 200)</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Review if this path should be publicly accessible.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">1</span>
+             | CWE-200
+          </div>
+          
+          
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">48. Directory/File Discovery - Path Accessible</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/crossdomain.xml</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Discovered accessible path: /crossdomain.xml</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Path accessible: /crossdomain.xml (Status: 200)</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Review if this path should be publicly accessible.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">1</span>
+             | CWE-200
+          </div>
+          
+          
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">49. Directory/File Discovery - Path Accessible</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/clientaccesspolicy.xml</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Discovered accessible path: /clientaccesspolicy.xml</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Path accessible: /clientaccesspolicy.xml (Status: 200)</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Review if this path should be publicly accessible.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">1</span>
+             | CWE-200
+          </div>
+          
+          
+          
+        </div>
+      </div>
+    
+      <div class="vulnerability">
+        <div class="vuln-header info">
+          <span class="vuln-title">50. Directory/File Discovery - Path Accessible</span>
+          <span class="severity-badge info">info</span>
+        </div>
+        <div class="vuln-body">
+          <div class="vuln-section">
+            <h4>🔗 الرابط | URL</h4>
+            <code>http://testphp.vulnweb.com/images/</code>
+          </div>
+          
+          <div class="vuln-section">
+            <h4>📝 الوصف | Description</h4>
+            <p>Discovered accessible path: /images/</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>🔍 الدليل | Evidence</h4>
+            <code>Path accessible: /images/ (Status: 200)</code>
+          </div>
+          
+          
+          
+          
+          <div class="vuln-section">
+            <h4>🛡️ طريقة الإصلاح | Remediation</h4>
+            <p>Review if this path should be publicly accessible.</p>
+          </div>
+          
+          
+          <div class="vuln-section">
+            <h4>📊 CVSS Score</h4>
+            <span class="cvss-score cvss-low">1</span>
+             | CWE-200
+          </div>
+          
+          
+          
+        </div>
+      </div>
+    
+    </section>
+    
+    <footer>
+      <p>تم إنشاء هذا التقرير بواسطة ماسح الثغرات الآلي | Auto Vulnerability Scanner</p>
+      <p>© 2026 - للاستخدام الأخلاقي فقط | For Ethical Use Only</p>
+    </footer>
+  </div>
+  
+  <script>
+    document.querySelectorAll('.vuln-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const body = header.nextElementSibling;
+        body.style.display = body.style.display === 'none' ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "Example Scanner",
+  "version": "1.0.0",
+  "type": "scanner",
+  "main": "ExampleScanner.js",
+  "description": "An example custom vulnerability scanner plugin that demonstrates the plugin architecture",
+  "author": "VulnHunter Team",
+  "license": "MIT",
+  "permissions": ["network"],
+  "hooks": ["beforeScan", "afterScan", "onStartup", "onShutdown"],
+  "config": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable this scanner"
+    },
+    "checkComments": {
+      "type": "boolean",
+      "default": true,
+      "description": "Check for sensitive HTML comments"
+    },
+    "checkDebugEndpoints": {
+      "type": "boolean",
+      "default": true,
+      "description": "Check for exposed debug endpoints"
+    }
+  }
+}
