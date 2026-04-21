@@ -326,7 +326,7 @@ function ScanForm({ onSubmit }) {
 
             {/* Safety Settings */}
             <div>
-              <h5 className="text-sm font-bold text-cyber-blue mb-3">🎯 Result Quality</h5>
+              <h5 className="text-sm font-bold text-cyber-blue mb-3">🎯 {t('resultQuality')}</h5>
               <div className="grid md:grid-cols-2 gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -335,7 +335,7 @@ function ScanForm({ onSubmit }) {
                     onChange={(e) => setOptions({ ...options, verifyFindings: e.target.checked })}
                     className="w-4 h-4 accent-cyber-blue"
                   />
-                  <span className="text-sm text-gray-300">Verification Mode (reduce false positives)</span>
+                  <span className="text-sm text-gray-300">{t('verificationMode')}</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -346,7 +346,7 @@ function ScanForm({ onSubmit }) {
                     className="w-4 h-4 accent-cyber-yellow"
                     disabled={options.verifyFindings === false}
                   />
-                  <span className="text-sm text-gray-300">Include potential findings</span>
+                  <span className="text-sm text-gray-300">{t('includePotentialFindings')}</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -356,11 +356,11 @@ function ScanForm({ onSubmit }) {
                     onChange={(e) => setOptions({ ...options, enableDomXss: e.target.checked })}
                     className="w-4 h-4 accent-cyber-green"
                   />
-                  <span className="text-sm text-gray-300">Enable DOM XSS headless verification</span>
+                  <span className="text-sm text-gray-300">{t('enableDomXssHeadless')}</span>
                 </label>
 
                 <div>
-                  <label className="text-sm text-gray-400 block mb-1">Minimum Confidence Score</label>
+                  <label className="text-sm text-gray-400 block mb-1">{t('minimumConfidenceScore')}</label>
                   <input
                     type="number"
                     min="0"

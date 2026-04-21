@@ -111,18 +111,9 @@ export class ScanScheduler {
       }
 
       // Create scanner and run
-      const scanner = new VulnerabilityScanner(schedule.scanOptions);
-      
-      // Emit start event
-      if (this.io) {
-        this.io.emit('scheduled:start', {
-          scheduleId: schedule.id,
-          scanId,
-          targetUrl: schedule.targetUrl
-        });
-      }
-
-      const results = await scanner.scan(schedule.targetUrl, scanId, {
+      const scanner = new VulnerabilityScanner(schedule.targetUrl, {
+        ...schedule.scanOptions,
+        scanId,
         onProgress: (progress) => {
           if (this.io) {
             this.io.emit('scheduled:progress', {
@@ -142,6 +133,17 @@ export class ScanScheduler {
           }
         }
       });
+      
+      // Emit start event
+      if (this.io) {
+        this.io.emit('scheduled:start', {
+          scheduleId: schedule.id,
+          scanId,
+          targetUrl: schedule.targetUrl
+        });
+      }
+
+      const results = await scanner.scan();
 
       // Update schedule info
       schedule.lastRun = new Date().toISOString();

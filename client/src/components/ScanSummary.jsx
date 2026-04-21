@@ -116,7 +116,7 @@ function ScanSummary({ summary, targetUrl, onExport, onExportSarif, onExportWalk
         <div className="bg-dark-800/50 rounded-xl p-4 flex items-center gap-3">
           <FaClock className="text-2xl text-cyber-blue" />
           <div>
-            <div className="text-lg font-bold">{summary.duration}</div>
+            <div className="text-lg font-bold">{summary.duration || summary.scanDuration || '0s'}</div>
             <div className="text-xs text-gray-400">{t('scanDuration')}</div>
           </div>
         </div>
@@ -141,6 +141,32 @@ function ScanSummary({ summary, targetUrl, onExport, onExportSarif, onExportWalk
             <div className="text-xs text-gray-400">{t('totalVulns')}</div>
           </div>
         </div>
+      </div>
+
+      {/* Verification Quality */}
+      <div className="mt-6 bg-dark-800/50 rounded-xl p-4">
+        <h4 className="font-bold text-cyber-blue mb-3">{t('verificationQuality')}</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+          <div className="bg-dark-700 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-green-400">{summary.confirmed || summary.verification?.confirmed || 0}</div>
+            <div className="text-xs text-gray-400">{t('confirmedFindings')}</div>
+          </div>
+          <div className="bg-dark-700 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-yellow-400">{summary.probable || summary.verification?.probable || 0}</div>
+            <div className="text-xs text-gray-400">{t('probableFindings')}</div>
+          </div>
+          <div className="bg-dark-700 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-orange-400">{summary.potential || summary.verification?.potential || 0}</div>
+            <div className="text-xs text-gray-400">{t('potentialFindings')}</div>
+          </div>
+          <div className="bg-dark-700 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-cyber-blue">{summary.filteredOut?.total || 0}</div>
+            <div className="text-xs text-gray-400">{t('filteredOutFindings')}</div>
+          </div>
+        </div>
+        <p className="text-xs text-gray-500">
+          {t('verificationEnabledText')}: {summary.verificationEnabled ? t('enabledText') : t('disabledText')} | {t('minimumConfidenceText')}: {summary.minConfidenceScore ?? 0}
+        </p>
       </div>
 
       {/* Severity Breakdown */}
