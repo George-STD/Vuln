@@ -1,1 +1,8 @@
 node_modules
+
+# Logs
+logs/
+server/logs/
+*.log
+*.log.*
+*.jsonl
