@@ -231,6 +231,15 @@ export class OpenRedirectScanner extends BaseScanner {
     return vulnerabilities;
   }
   
+  /**
+   * REFACTORED: detectOpenRedirect with strict URI hostname validation.
+   *
+   * OLD LOGIC: Used url.includes('evil.com') — flagged any response containing
+   * the payload string, even when the redirect stayed on the original domain.
+   *
+   * NEW LOGIC: Parse the Location URL, extract hostname, and only flag if
+   * the hostname IS the attacker domain (not the target domain).
+   */
   detectOpenRedirect(response, payload) {
     const result = {
       detected: false,
@@ -245,7 +254,7 @@ export class OpenRedirectScanner extends BaseScanner {
     const body = response.data?.toString() || '';
     
     // Check for redirect response with external URL
-    if (status >= 300 && status < 400) {
+    if (status >= 300 && status < 400 && locationHeader) {
       if (this.isExternalRedirect(locationHeader, payload)) {
         result.detected = true;
         result.type = 'Header-based Redirect';
@@ -288,39 +297,70 @@ export class OpenRedirectScanner extends BaseScanner {
       }
     }
     
-    // Check if payload appears in response (DOM-based potential)
-    if (payload.includes('evil.com') && body.includes('evil.com')) {
-      result.detected = true;
-      result.type = 'Potential DOM-based Redirect';
-      result.severity = 'low';
-      result.evidence = 'External URL reflected in response';
-      result.description = 'External URL appears in response, potential client-side redirect.';
-      return result;
-    }
+    /**
+     * REMOVED: The old "DOM-based potential" check that flagged any response
+     * containing "evil.com" in the body. This was the #1 source of FPs because
+     * search engines reflect query params in HTML without any redirect behavior.
+     */
     
     return result;
   }
   
-  isExternalRedirect(url, payload) {
-    if (!url) return false;
+  /**
+   * REFACTORED: Strict hostname-based external redirect check.
+   *
+   * Parses the redirect URL with Node's URL constructor and extracts the hostname.
+   * Only returns true if the hostname IS an external attacker domain.
+   * This prevents FPs like:
+   *   Location: https://google.com/search?as_sitesearch=https://evil.com
+   *   → hostname = google.com → NOT external → correctly discarded
+   */
+  isExternalRedirect(redirectUrl, payload) {
+    if (!redirectUrl) return false;
     
-    const urlLower = url.toLowerCase();
-    
-    // Check if redirect is to an external domain
-    if (urlLower.includes('evil.com') || 
-        urlLower.includes('0x7f') ||
-        urlLower.includes('2130706433')) {
-      return true;
-    }
-    
-    // Check if URL matches payload structure
-    if (payload.includes('evil.com') && urlLower.includes('evil')) {
-      return true;
-    }
-    
-    // Check for protocol-relative URLs to external domains
-    if (urlLower.startsWith('//') && !urlLower.includes(this.extractDomain(this.targetUrl))) {
-      return true;
+    const targetDomain = this.extractDomain(this.targetUrl);
+    if (!targetDomain) return false;
+
+    try {
+      let parsedUrl;
+      
+      // Handle protocol-relative URLs (//evil.com)
+      if (redirectUrl.startsWith('//')) {
+        parsedUrl = new URL('https:' + redirectUrl);
+      } else if (/^https?:\/\//i.test(redirectUrl)) {
+        parsedUrl = new URL(redirectUrl);
+      } else {
+        // javascript: scheme is dangerous but not an open redirect
+        return false;
+      }
+
+      const redirectHost = parsedUrl.hostname.toLowerCase();
+      const targetHost = targetDomain.toLowerCase();
+
+      // If redirect goes to the target's own domain → NOT external
+      if (redirectHost === targetHost || redirectHost.endsWith('.' + targetHost)) {
+        return false;
+      }
+
+      // Confirm redirect hostname matches a known attacker domain from payloads
+      const attackerDomains = ['evil.com', 'attacker.com'];
+      if (attackerDomains.some(d => redirectHost === d || redirectHost.endsWith('.' + d))) {
+        return true;
+      }
+
+      // For IP-based payloads, compare parsed hostname
+      try {
+        let payloadUrl;
+        if (payload.startsWith('//')) payloadUrl = new URL('https:' + payload);
+        else if (payload.startsWith('http')) payloadUrl = new URL(payload);
+        else return false;
+        return payloadUrl.hostname.toLowerCase() === redirectHost;
+      } catch {
+        return false;
+      }
+
+    } catch (parseError) {
+      this.log(`URL parse error in redirect check: ${parseError.message}`, 'debug');
     }
     
     return false;

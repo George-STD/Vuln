@@ -191,6 +191,32 @@ export class SQLiScanner extends BaseScanner {
     return vulnerabilities;
   }
   
+  /**
+   * Parameters that should NEVER be tested for SQLi.
+   * Injecting into these corrupts their cryptographic value, causing the server
+   * to return a different response (error/logout) — which the old scanner
+   * incorrectly interpreted as Boolean SQLi.
+   */
+  get nonInjectableParams() {
+    return [
+      'sig', 'signature', 'hash', 'hmac', 'digest', 'checksum',
+      'token', 'csrf', 'csrf_token', '_token', 'xsrf',
+      'nonce', 'state', 'code_challenge', 'code_verifier',
+      'client_secret', 'api_key', 'apikey', 'access_token',
+      'refresh_token', 'id_token', 'session', 'sessionid',
+      'jsessionid', 'phpsessid', 'viewstate', '__viewstate'
+    ];
+  }
+
+  /**
+   * Check if a parameter name looks like a signature, hash, or token
+   * that should not be fuzzed.
+   */
+  isNonInjectable(paramName) {
+    const lower = paramName.toLowerCase();
+    return this.nonInjectableParams.some(p => lower === p || lower.endsWith('_' + p) || lower.endsWith(p));
+  }
+
   async testUrlParameters(url) {
     const vulnerabilities = [];
     
@@ -198,11 +224,27 @@ export class SQLiScanner extends BaseScanner {
       const parsedUrl = new URL(url);
       const params = parsedUrl.searchParams;
       
-      // First, get baseline response
+      // Get baseline response for comparison
       const baselineResponse = await this.makeRequest(url);
-      const baselineLength = baselineResponse?.data?.length || 0;
+      if (!baselineResponse) return vulnerabilities;
+      const baselineBody = baselineResponse.data?.toString() || '';
+      const baselineLength = baselineBody.length;
       
       for (const [key, originalValue] of params.entries()) {
+        if (this.stopped) break;
+
+        /**
+         * PARAMETER FILTERING:
+         * Skip parameters that are signatures, hashes, tokens, or CSRF values.
+         * Injecting SQL into these corrupts the cryptographic value, causing
+         * a server-side validation failure (not SQL injection). The resulting
+         * different response was previously misdetected as Boolean SQLi.
+         */
+        if (this.isNonInjectable(key)) {
+          this.log(`Skipping non-injectable param: "${key}"`, 'debug');
+          continue;
+        }
+
         // Test error-based injection
         for (const payload of this.payloads.errorBased.slice(0, 5)) {
           if (this.stopped) break;
@@ -237,44 +279,120 @@ export class SQLiScanner extends BaseScanner {
           }
         }
         
-        // Test boolean-based blind injection
-        const truePayload = "' AND '1'='1";
-        const falsePayload = "' AND '1'='2";
-        
-        const trueUrl = new URL(url);
-        trueUrl.searchParams.set(key, originalValue + truePayload);
-        
-        const falseUrl = new URL(url);
-        falseUrl.searchParams.set(key, originalValue + falsePayload);
-        
-        const [trueResponse, falseResponse] = await Promise.all([
-          this.makeRequest(trueUrl.href),
-          this.makeRequest(falseUrl.href)
-        ]);
-        
-        if (trueResponse && falseResponse) {
-          const trueDiff = Math.abs((trueResponse.data?.length || 0) - baselineLength);
-          const falseDiff = Math.abs((falseResponse.data?.length || 0) - baselineLength);
+        /**
+         * REFACTORED: Boolean-based Blind SQLi — True/False Logic Test
+         *
+         * OLD LOGIC (FP-prone):
+         *   Sent TRUE and FALSE payloads, compared lengths to baseline.
+         *   If TRUE was close to baseline and FALSE differed by >100 bytes → flagged.
+         *   PROBLEM: Injecting ' into a signature param invalidates it, causing
+         *   the server to return an error page for BOTH payloads. The length
+         *   difference between the two error pages triggered a false positive.
+         *
+         * NEW LOGIC — Three-way comparison + confirmation round:
+         *   1. Send Payload A (TRUE):  originalValue + " AND 1=1--"
+         *   2. Send Payload B (FALSE): originalValue + " AND 1=2--"
+         *   3. THREE-WAY VALIDATION:
+         *      a) TRUE response must be SIMILAR to baseline (same page behavior)
+         *      b) FALSE response must be DIFFERENT from baseline
+         *      c) TRUE and FALSE responses must be DIFFERENT from each other
+         *   4. CONFIRMATION ROUND with a different payload syntax:
+         *      Payload C (TRUE):  originalValue + " OR 1=1--"
+         *      Payload D (FALSE): originalValue + " OR 1=2--"
+         *      If the confirmation round also passes → confirmed SQLi.
+         *      If it fails → likely a FP (e.g., WAF, signature invalidation).
+         */
+        const boolPairs = [
+          { trueP: "' AND '1'='1", falseP: "' AND '1'='2", syntax: 'single-quote AND' },
+          { trueP: ' AND 1=1--',   falseP: ' AND 1=2--',   syntax: 'numeric AND' },
+        ];
+
+        let boolConfirmed = false;
+
+        for (const pair of boolPairs) {
+          if (this.stopped || boolConfirmed) break;
+
+          const trueUrl = new URL(url);
+          trueUrl.searchParams.set(key, originalValue + pair.trueP);
           
-          // If true condition behaves like baseline but false doesn't
-          if (trueDiff < 100 && falseDiff > 100) {
-            vulnerabilities.push({
-              type: 'SQL Injection',
-              subType: 'Boolean-based Blind',
-              severity: 'critical',
-              url: url,
-              parameter: key,
-              payload: truePayload,
-              evidence: `Response length difference detected: TRUE condition similar to baseline, FALSE condition differs by ${falseDiff} bytes`,
-              description: `Boolean-based blind SQL Injection detected in parameter "${key}"`,
-              remediation: 'Use parameterized queries. Implement proper input validation.',
-              references: [
-                'https://portswigger.net/web-security/sql-injection/blind',
-                'https://owasp.org/www-community/attacks/Blind_SQL_Injection'
-              ],
-              cvss: 9.8,
-              cwe: 'CWE-89'
-            });
+          const falseUrl = new URL(url);
+          falseUrl.searchParams.set(key, originalValue + pair.falseP);
+          
+          const [trueResp, falseResp] = await Promise.all([
+            this.makeRequest(trueUrl.href),
+            this.makeRequest(falseUrl.href)
+          ]);
+          
+          if (!trueResp || !falseResp) continue;
+
+          const trueBody = trueResp.data?.toString() || '';
+          const falseBody = falseResp.data?.toString() || '';
+          const trueLen = trueBody.length;
+          const falseLen = falseBody.length;
+
+          const trueDiffFromBaseline = Math.abs(trueLen - baselineLength);
+          const falseDiffFromBaseline = Math.abs(falseLen - baselineLength);
+          const trueFalseDiff = Math.abs(trueLen - falseLen);
+
+          /**
+           * THREE-WAY VALIDATION:
+           * 1) TRUE ≈ Baseline: The true condition didn't change the page behavior
+           * 2) FALSE ≠ Baseline: The false condition changed the page
+           * 3) TRUE ≠ FALSE: The two conditions produced different outputs
+           *    (This rules out cases where BOTH payloads break the app equally)
+           */
+          const trueMatchesBaseline = trueDiffFromBaseline < 100;
+          const falseDiffersFromBaseline = falseDiffFromBaseline > 200;
+          const trueAndFalseDiffer = trueFalseDiff > 200;
+
+          if (trueMatchesBaseline && falseDiffersFromBaseline && trueAndFalseDiffer) {
+            this.log(`Boolean SQLi candidate on "${key}" (${pair.syntax}). Running confirmation round...`, 'info');
+
+            // ── CONFIRMATION ROUND with different payload syntax ──
+            const confirmPair = pair.syntax.includes('single')
+              ? { trueP: ' AND 1=1--', falseP: ' AND 1=2--' }
+              : { trueP: "' OR '1'='1", falseP: "' OR '1'='2" };
+
+            const confirmTrueUrl = new URL(url);
+            confirmTrueUrl.searchParams.set(key, originalValue + confirmPair.trueP);
+            const confirmFalseUrl = new URL(url);
+            confirmFalseUrl.searchParams.set(key, originalValue + confirmPair.falseP);
+
+            const [cTrueResp, cFalseResp] = await Promise.all([
+              this.makeRequest(confirmTrueUrl.href),
+              this.makeRequest(confirmFalseUrl.href)
+            ]);
+
+            if (cTrueResp && cFalseResp) {
+              const cTrueLen = (cTrueResp.data?.toString() || '').length;
+              const cFalseLen = (cFalseResp.data?.toString() || '').length;
+              const cTrueDiff = Math.abs(cTrueLen - baselineLength);
+              const cTFDiff = Math.abs(cTrueLen - cFalseLen);
+
+              if (cTrueDiff < 100 && cTFDiff > 200) {
+                // Confirmed with a second payload syntax — high confidence
+                boolConfirmed = true;
+                vulnerabilities.push({
+                  type: 'SQL Injection',
+                  subType: 'Boolean-based Blind',
+                  severity: 'critical',
+                  url: url,
+                  parameter: key,
+                  payload: pair.trueP,
+                  evidence: `Confirmed with two payload syntaxes. TRUE≈Baseline (Δ${trueDiffFromBaseline}B), FALSE≠Baseline (Δ${falseDiffFromBaseline}B), TRUE≠FALSE (Δ${trueFalseDiff}B). Confirmation: Δ${cTFDiff}B.`,
+                  description: `Boolean-based blind SQL Injection confirmed in parameter "${key}" with double validation.`,
+                  remediation: 'Use parameterized queries. Implement proper input validation.',
+                  references: [
+                    'https://portswigger.net/web-security/sql-injection/blind',
+                    'https://owasp.org/www-community/attacks/Blind_SQL_Injection'
+                  ],
+                  cvss: 9.8,
+                  cwe: 'CWE-89'
+                });
+              } else {
+                this.log(`Boolean SQLi confirmation FAILED for "${key}". Likely FP (signature/hash invalidation).`, 'info');
+              }
+            }
           }
         }
         
@@ -289,22 +407,29 @@ export class SQLiScanner extends BaseScanner {
           const duration = Date.now() - startTime;
           
           if (duration >= 3000) {
-            vulnerabilities.push({
-              type: 'SQL Injection',
-              subType: 'Time-based Blind',
-              severity: 'critical',
-              url: url,
-              parameter: key,
-              payload: timePayload,
-              evidence: `Response delayed by ${duration}ms indicating time-based SQL injection`,
-              description: `Time-based blind SQL Injection detected in parameter "${key}"`,
-              remediation: 'Use parameterized queries. Implement proper input validation.',
-              references: [
-                'https://portswigger.net/web-security/sql-injection/blind#exploiting-blind-sql-injection-by-triggering-time-delays'
-              ],
-              cvss: 9.8,
-              cwe: 'CWE-89'
-            });
+            // Confirmation request for time-based
+            const confirmStart = Date.now();
+            await this.makeRequest(timeUrl.href, { timeout: 10000 });
+            const confirmDuration = Date.now() - confirmStart;
+
+            if (confirmDuration >= 2500) {
+              vulnerabilities.push({
+                type: 'SQL Injection',
+                subType: 'Time-based Blind',
+                severity: 'critical',
+                url: url,
+                parameter: key,
+                payload: timePayload,
+                evidence: `Response delayed by ${duration}ms, confirmed at ${confirmDuration}ms`,
+                description: `Time-based blind SQL Injection detected in parameter "${key}"`,
+                remediation: 'Use parameterized queries. Implement proper input validation.',
+                references: [
+                  'https://portswigger.net/web-security/sql-injection/blind#exploiting-blind-sql-injection-by-triggering-time-delays'
+                ],
+                cvss: 9.8,
+                cwe: 'CWE-89'
+              });
+            }
           }
         }
       }

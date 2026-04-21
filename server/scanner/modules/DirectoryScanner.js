@@ -384,9 +384,82 @@ export class DirectoryScanner extends BaseScanner {
     return false;
   }
   
+  /**
+   * ALLOWLIST: Known-public files and paths that are EXPECTED to exist on any website.
+   * These are intentionally public resources that provide no security value when reported.
+   * Flagging /robots.txt or /sitemap.xml creates report noise without actionable findings.
+   */
+  get publicPathAllowlist() {
+    return new Set([
+      // Standard web files — required by specifications or widely expected
+      '/robots.txt',
+      '/sitemap.xml',
+      '/sitemap_index.xml',
+      '/favicon.ico',
+      '/manifest.json',
+      '/browserconfig.xml',
+      '/crossdomain.xml',
+      '/clientaccesspolicy.xml',
+      '/humans.txt',
+      '/security.txt',
+      '/.well-known/',
+      '/apple-touch-icon.png',
+      '/apple-touch-icon-precomposed.png',
+      
+      // Common public directories — not security-relevant
+      '/images/',
+      '/img/',
+      '/assets/',
+      '/static/',
+      '/public/',
+      '/media/',
+      '/css/',
+      '/js/',
+      '/fonts/',
+      
+      // Generic business paths — not vulnerabilities
+      '/services/',
+      '/jobs/',
+      '/accounts/',
+      '/about/',
+      '/contact/',
+      '/help/',
+      '/support/',
+      '/blog/',
+      '/news/',
+      '/faq/',
+      '/terms/',
+      '/privacy/',
+      '/careers/',
+    ]);
+  }
+
+  /**
+   * Check if a discovered path is on the public allowlist.
+   * Matches both exact paths and prefix patterns (for trailing-slash directories).
+   */
+  isAllowlisted(path) {
+    const lower = path.toLowerCase();
+    if (this.publicPathAllowlist.has(lower)) return true;
+    // Check without trailing slash too
+    if (this.publicPathAllowlist.has(lower + '/')) return true;
+    if (lower.endsWith('/') && this.publicPathAllowlist.has(lower.slice(0, -1))) return true;
+    return false;
+  }
+
   categorizeDiscovery(result) {
     const path = result.path.toLowerCase();
     const url = result.url;
+
+    /**
+     * ALLOWLIST FILTER:
+     * If this path is a known-public file/directory, skip it entirely.
+     * These create report noise without providing actionable security findings.
+     */
+    if (this.isAllowlisted(path)) {
+      this.log(`Allowlisted path skipped: ${path} (known public resource)`, 'debug');
+      return null;
+    }
     
     // Git exposure
     if (path.includes('.git')) {
@@ -537,18 +610,13 @@ export class DirectoryScanner extends BaseScanner {
       }
     }
     
-    // Default info severity for other discoveries
-    return {
-      type: 'Directory/File Discovery',
-      subType: 'Path Accessible',
-      severity: 'info',
-      url: url,
-      evidence: `Path accessible: ${path} (Status: ${result.status})`,
-      description: `Discovered accessible path: ${path}`,
-      remediation: 'Review if this path should be publicly accessible.',
-      references: [],
-      cvss: 1.0,
-      cwe: 'CWE-200'
-    };
+    /**
+     * CHANGED: Uncategorized paths that pass the catch-all fingerprinter AND
+     * don't match any sensitive pattern above are silently dropped.
+     * The old scanner returned these as 'info' severity findings, which
+     * created noise (e.g., /services/, /jobs/, /accounts/ on Google).
+     * If a path isn't sensitive, it shouldn't appear in the vulnerability report.
+     */
+    return null;
   }
 }
