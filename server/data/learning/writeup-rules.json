@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-30T08:01:24.621Z",
+  "rules": [
+    {
+      "id": "writeup-rce-portswigger-net-research-websocket-t",
+      "name": "Write-up learned: Remote Code Execution",
+      "typePattern": "rce",
+      "subTypePattern": null,
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "uid=",
+        "root:",
+        "command execution",
+        "shell"
+      ],
+      "confidenceBoost": 12,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 16,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "WebSocket Turbo Intruder: Unearthing the WebSocket Goldmine | PortSwigger Research",
+          "url": "https://portswigger.net/research/websocket-turbo-intruder-unearthing-the-websocket-goldmine"
+        },
+        {
+          "title": "Drag and Pwnd: Leverage ASCII characters to exploit VS Code | PortSwigger Research",
+          "url": "https://portswigger.net/research/drag-and-pwnd-leverage-ascii-characters-to-exploit-vs-code"
+        },
+        {
+          "title": "Top 10 web hacking techniques of 2024: nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open"
+        },
+        {
+          "title": "Listen to the whispers: web timing attacks that actually work | PortSwigger Research",
+          "url": "https://portswigger.net/research/listen-to-the-whispers-web-timing-attacks-that-actually-work"
+        },
+        {
+          "title": "Introducing SignSaboteur: forge signed web tokens with ease | PortSwigger Research",
+          "url": "https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease"
+        },
+        {
+          "title": "Top 10 web hacking techniques of 2023 - nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-sqli-portswigger-net-research-top-10-web-",
+      "name": "Write-up learned: SQL Injection",
+      "typePattern": "sql injection",
+      "subTypePattern": [
+        "error-based",
+        "boolean",
+        "time-based"
+      ],
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "sql syntax",
+        "union select",
+        "sleep(",
+        "waitfor delay",
+        "ora-"
+      ],
+      "confidenceBoost": 10,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 15,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Top 10 web hacking techniques of 2023 | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023"
+        },
+        {
+          "title": "Hiding payloads in Java source code strings | PortSwigger Research",
+          "url": "https://portswigger.net/research/hiding-payloads-in-java-source-code-strings"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-xss-portswigger-net-research-top-10-web-",
+      "name": "Write-up learned: Cross-Site Scripting",
+      "typePattern": [
+        "xss",
+        "dom xss"
+      ],
+      "subTypePattern": [
+        "reflected",
+        "stored",
+        "dom"
+      ],
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "<script",
+        "onerror=",
+        "javascript:",
+        "svg onload"
+      ],
+      "confidenceBoost": 10,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 14,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Top 10 web hacking techniques of 2023 - nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-auth-bypass-portswigger-net-research-websocket-t",
+      "name": "Write-up learned: Authentication/Authorization Bypass",
+      "typePattern": [
+        "authentication bypass",
+        "authorization bypass",
+        "idor"
+      ],
+      "subTypePattern": null,
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "unauthorized",
+        "bypass",
+        "access control"
+      ],
+      "confidenceBoost": 9,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 13,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "WebSocket Turbo Intruder: Unearthing the WebSocket Goldmine | PortSwigger Research",
+          "url": "https://portswigger.net/research/websocket-turbo-intruder-unearthing-the-websocket-goldmine"
+        },
+        {
+          "title": "Top 10 web hacking techniques of 2024: nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-xss-portswigger-net-research-document-my",
+      "name": "Write-up learned: Cross-Site Scripting",
+      "typePattern": [
+        "xss",
+        "dom xss"
+      ],
+      "subTypePattern": [
+        "reflected",
+        "stored",
+        "dom"
+      ],
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "<script",
+        "onerror=",
+        "javascript:",
+        "svg onload",
+        "*Note* if HTML entities are found they very rarely indicate an XSS vulnerability.",
+        "Look at this LLM response and point out why it thinks there's XSS when there clearly isn't:"
+      ],
+      "confidenceBoost": 10,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 14,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Document My Pentest: you hack, the AI writes it up! | PortSwigger Research",
+          "url": "https://portswigger.net/research/document-my-pentest"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-xss-portswigger-net-research-new-exotic-",
+      "name": "Write-up learned: Cross-Site Scripting",
+      "typePattern": [
+        "xss",
+        "dom xss"
+      ],
+      "subTypePattern": [
+        "reflected",
+        "stored",
+        "dom"
+      ],
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "<script",
+        "onerror=",
+        "javascript:",
+        "svg onload",
+        "<xss onpointercancel=alert(1)>XSS</xss>",
+        "<xss onfocus=alert(1) autofocus tabindex=1>"
+      ],
+      "confidenceBoost": 10,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 14,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "onwebkitplaybacktargetavailabilitychanged?! New exotic events in the XSS cheat sheet | PortSwigger Research",
+          "url": "https://portswigger.net/research/new-exotic-events-in-the-xss-cheat-sheet"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-ssrf-portswigger-net-research-top-10-web-",
+      "name": "Write-up learned: Server-Side Request Forgery",
+      "typePattern": "ssrf",
+      "subTypePattern": null,
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "169.254.169.254",
+        "metadata",
+        "internal host",
+        "localhost"
+      ],
+      "confidenceBoost": 10,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 14,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Top 10 web hacking techniques of 2023 - nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-idor-portswigger-net-research-repeater-st",
+      "name": "Write-up learned: Insecure Direct Object Reference",
+      "typePattern": "idor",
+      "subTypePattern": null,
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "object id",
+        "user id",
+        "account id",
+        "horizontal privilege",
+        "\\\"param\\\": { \\\"values\\\": [\\\"wiener\\\"], \\\"name\\\": \\\"id\\\", \\\"type\\\": \\\"URL\\\", \\\"vulnerabilityClass\\\": \\\"IDOR\\\" }"
+      ],
+      "confidenceBoost": 9,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 13,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Repeater Strike: manual testing, amplified | PortSwigger Research",
+          "url": "https://portswigger.net/research/repeater-strike-manual-testing-amplified"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    },
+    {
+      "id": "writeup-csrf-portswigger-net-research-top-10-web-",
+      "name": "Write-up learned: Cross-Site Request Forgery",
+      "typePattern": "csrf",
+      "subTypePattern": null,
+      "descriptionPattern": null,
+      "requiredEvidencePatterns": [
+        "csrf token",
+        "state changing",
+        "forged request"
+      ],
+      "confidenceBoost": 8,
+      "confidencePenalty": 0,
+      "missingEvidencePenalty": 12,
+      "suppressIfMissingEvidence": false,
+      "sources": [
+        {
+          "title": "Top 10 web hacking techniques of 2023 - nominations open | PortSwigger Research",
+          "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open"
+        }
+      ],
+      "updatedAt": "2026-04-30T08:01:24.620Z"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-30T08:01:16.440Z",
+  "byUrl": {
+    "https://portswigger.net/research/top-10-web-hacking-techniques-of-2025": {
+      "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2025",
+      "title": "Top 10 web hacking techniques of 2025 | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:51:18.231Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:51:18.231Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:565b599a85552a49464df41eb21cc5bfb0d75b7212e21ad892a7798ef7edefc0"
+    },
+    "https://portswigger.net/research/introducing-http-anomaly-rank": {
+      "url": "https://portswigger.net/research/introducing-http-anomaly-rank",
+      "title": "Introducing HTTP Anomaly Rank | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:52:14.015Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:52:14.015Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:dd0d0c20e3d223a20b8c472c41cf3e6820c0e66b3a7c5a461e3d7b4dee313e35"
+    },
+    "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024": {
+      "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024",
+      "title": "Top 10 web hacking techniques of 2024 | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:53:14.212Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:53:14.212Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:95228c473b8a19d18594bfc2de76c1c9e1b1c2a8f4781674c7c33afff999b54c"
+    },
+    "https://portswigger.net/research/a-hacking-hat-trick-previewing-three-portswigger-research-publications-coming-to-def-con-amp-black-hat-usa": {
+      "url": "https://portswigger.net/research/a-hacking-hat-trick-previewing-three-portswigger-research-publications-coming-to-def-con-amp-black-hat-usa",
+      "title": "A hacking hat-trick: previewing three PortSwigger Research publications coming to DEF CON & Black Hat USA | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:54:12.555Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:54:12.555Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:640afcad651f4568576be90f489ea6a984bfaa3b827cda046f7ead4105ad6c4c"
+    },
+    "https://portswigger.net/research/new-exotic-events-in-the-xss-cheat-sheet": {
+      "url": "https://portswigger.net/research/new-exotic-events-in-the-xss-cheat-sheet",
+      "title": "onwebkitplaybacktargetavailabilitychanged?! New exotic events in the XSS cheat sheet | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:55:12.350Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:55:12.350Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:72d2d80e640a4da84cbf7e3288bdb6c8ae5a3201074f1f50d039dcba776bda69"
+    },
+    "https://portswigger.net/research/adjusting-your-http-perspective-with-bambdas": {
+      "url": "https://portswigger.net/research/adjusting-your-http-perspective-with-bambdas",
+      "title": "Refining your HTTP perspective, with bambdas | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:56:12.293Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:56:12.293Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:1d1e685b4ef050860a87bffc3881d87a3e84d1c552b6789207fd9ecbcbcf1370"
+    },
+    "https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease": {
+      "url": "https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease",
+      "title": "Introducing SignSaboteur: forge signed web tokens with ease | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:57:13.007Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:57:13.007Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:4de27764cfbae83cff5e7e0c5a1067da330efceff9676c05deeeffe06f038df1"
+    },
+    "https://portswigger.net/research/trace-desync-attack": {
+      "url": "https://portswigger.net/research/trace-desync-attack",
+      "title": "Making desync attacks easy with TRACE | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:58:12.976Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:58:12.976Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:4eb773b49248cb3252edf78d46928468a84a8c78e5de193e9ec03ca8a5a3eccd"
+    },
+    "https://portswigger.net/research/using-form-hijacking-to-bypass-csp": {
+      "url": "https://portswigger.net/research/using-form-hijacking-to-bypass-csp",
+      "title": "Using form hijacking to bypass CSP | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T07:59:12.940Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T07:59:12.940Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:a293af90256bb37cbb003b16b5f66c13bf9b890f37b98b759b150e02144b7eeb"
+    },
+    "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023": {
+      "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023",
+      "title": "Top 10 web hacking techniques of 2023 | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T08:00:12.946Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T08:00:12.946Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:6ffe2071db75416f334bba37278c7e90f971035ec662aafc9d8b3d936493d994"
+    },
+    "https://portswigger.net/research/hiding-payloads-in-java-source-code-strings": {
+      "url": "https://portswigger.net/research/hiding-payloads-in-java-source-code-strings",
+      "title": "Hiding payloads in Java source code strings | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T08:01:07.109Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T08:01:07.109Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:d5c7c85864968ccb704c8a9df1b0aa659d969eebced11524241bc4df5f135e73"
+    },
+    "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open": {
+      "url": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open",
+      "title": "Top 10 web hacking techniques of 2023 - nominations open | PortSwigger Research",
+      "firstSeenAt": "2026-04-30T08:01:16.440Z",
+      "lastStatus": "imported",
+      "lastAttemptAt": "2026-04-30T08:01:16.440Z",
+      "lastError": null,
+      "attempts": 1,
+      "successfulAttempts": 1,
+      "failedAttempts": 0,
+      "nextRetryAt": null,
+      "contentFingerprint": "sha256:2940a0358f6bb86bf771fbe18c62ce0fe832030c895357be3a27c8f015aeb8f3"
+    }
+  },
+  "byFingerprint": {
+    "sha256:565b599a85552a49464df41eb21cc5bfb0d75b7212e21ad892a7798ef7edefc0": {
+      "primaryUrl": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2025",
+      "firstSeenAt": "2026-04-30T07:51:18.231Z",
+      "lastSeenAt": "2026-04-30T07:51:18.231Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/top-10-web-hacking-techniques-of-2025"
+      ]
+    },
+    "sha256:dd0d0c20e3d223a20b8c472c41cf3e6820c0e66b3a7c5a461e3d7b4dee313e35": {
+      "primaryUrl": "https://portswigger.net/research/introducing-http-anomaly-rank",
+      "firstSeenAt": "2026-04-30T07:52:14.015Z",
+      "lastSeenAt": "2026-04-30T07:52:14.015Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/introducing-http-anomaly-rank"
+      ]
+    },
+    "sha256:95228c473b8a19d18594bfc2de76c1c9e1b1c2a8f4781674c7c33afff999b54c": {
+      "primaryUrl": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024",
+      "firstSeenAt": "2026-04-30T07:53:14.212Z",
+      "lastSeenAt": "2026-04-30T07:53:14.212Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/top-10-web-hacking-techniques-of-2024"
+      ]
+    },
+    "sha256:640afcad651f4568576be90f489ea6a984bfaa3b827cda046f7ead4105ad6c4c": {
+      "primaryUrl": "https://portswigger.net/research/a-hacking-hat-trick-previewing-three-portswigger-research-publications-coming-to-def-con-amp-black-hat-usa",
+      "firstSeenAt": "2026-04-30T07:54:12.555Z",
+      "lastSeenAt": "2026-04-30T07:54:12.555Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/a-hacking-hat-trick-previewing-three-portswigger-research-publications-coming-to-def-con-amp-black-hat-usa"
+      ]
+    },
+    "sha256:72d2d80e640a4da84cbf7e3288bdb6c8ae5a3201074f1f50d039dcba776bda69": {
+      "primaryUrl": "https://portswigger.net/research/new-exotic-events-in-the-xss-cheat-sheet",
+      "firstSeenAt": "2026-04-30T07:55:12.350Z",
+      "lastSeenAt": "2026-04-30T07:55:12.350Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/new-exotic-events-in-the-xss-cheat-sheet"
+      ]
+    },
+    "sha256:1d1e685b4ef050860a87bffc3881d87a3e84d1c552b6789207fd9ecbcbcf1370": {
+      "primaryUrl": "https://portswigger.net/research/adjusting-your-http-perspective-with-bambdas",
+      "firstSeenAt": "2026-04-30T07:56:12.293Z",
+      "lastSeenAt": "2026-04-30T07:56:12.293Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/adjusting-your-http-perspective-with-bambdas"
+      ]
+    },
+    "sha256:4de27764cfbae83cff5e7e0c5a1067da330efceff9676c05deeeffe06f038df1": {
+      "primaryUrl": "https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease",
+      "firstSeenAt": "2026-04-30T07:57:13.007Z",
+      "lastSeenAt": "2026-04-30T07:57:13.007Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease"
+      ]
+    },
+    "sha256:4eb773b49248cb3252edf78d46928468a84a8c78e5de193e9ec03ca8a5a3eccd": {
+      "primaryUrl": "https://portswigger.net/research/trace-desync-attack",
+      "firstSeenAt": "2026-04-30T07:58:12.976Z",
+      "lastSeenAt": "2026-04-30T07:58:12.976Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/trace-desync-attack"
+      ]
+    },
+    "sha256:a293af90256bb37cbb003b16b5f66c13bf9b890f37b98b759b150e02144b7eeb": {
+      "primaryUrl": "https://portswigger.net/research/using-form-hijacking-to-bypass-csp",
+      "firstSeenAt": "2026-04-30T07:59:12.940Z",
+      "lastSeenAt": "2026-04-30T07:59:12.940Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/using-form-hijacking-to-bypass-csp"
+      ]
+    },
+    "sha256:6ffe2071db75416f334bba37278c7e90f971035ec662aafc9d8b3d936493d994": {
+      "primaryUrl": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023",
+      "firstSeenAt": "2026-04-30T08:00:12.946Z",
+      "lastSeenAt": "2026-04-30T08:00:12.946Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023"
+      ]
+    },
+    "sha256:d5c7c85864968ccb704c8a9df1b0aa659d969eebced11524241bc4df5f135e73": {
+      "primaryUrl": "https://portswigger.net/research/hiding-payloads-in-java-source-code-strings",
+      "firstSeenAt": "2026-04-30T08:01:07.109Z",
+      "lastSeenAt": "2026-04-30T08:01:07.109Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/hiding-payloads-in-java-source-code-strings"
+      ]
+    },
+    "sha256:2940a0358f6bb86bf771fbe18c62ce0fe832030c895357be3a27c8f015aeb8f3": {
+      "primaryUrl": "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open",
+      "firstSeenAt": "2026-04-30T08:01:16.440Z",
+      "lastSeenAt": "2026-04-30T08:01:16.440Z",
+      "seenCount": 1,
+      "seenUrls": [
+        "https://portswigger.net/research/top-10-web-hacking-techniques-of-2023-nominations-open"
+      ]
+    }
+  }
+}

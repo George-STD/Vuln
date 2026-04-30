@@ -298,8 +298,9 @@ export class DirectoryScanner extends BaseScanner {
       const bodyStr = response.data ? response.data.toString() : '';
       const length = bodyStr.length;
       
-      // Determine if path exists
-      if (status === 200 || status === 301 || status === 302 || status === 403) {
+      // Determine if path exists.
+      // Restrict to 200 OK only to avoid treating redirects/forbidden pages as exposures.
+      if (status === 200) {
         /**
          * CATCH-ALL DETECTION:
          * Before accepting this as a real discovery, compare the response
@@ -450,6 +451,12 @@ export class DirectoryScanner extends BaseScanner {
   categorizeDiscovery(result) {
     const path = result.path.toLowerCase();
     const url = result.url;
+
+    // Non-200 statuses are not treated as vulnerabilities here.
+    // This prevents false positives where 3xx/4xx pages are mislabeled as exposure.
+    if (result.status !== 200) {
+      return null;
+    }
 
     /**
      * ALLOWLIST FILTER:

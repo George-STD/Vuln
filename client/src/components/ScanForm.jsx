@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaSearch, FaCog, FaRocket, FaBug, FaSpider, FaBolt, FaShieldAlt, FaCode, FaServer, FaGraduationCap } from 'react-icons/fa'
+import { FaSearch, FaCog, FaRocket, FaBug, FaSpider, FaBolt, FaPause, FaPlay, FaSyncAlt, FaGraduationCap } from 'react-icons/fa'
 import VulnerabilityEducation from './VulnerabilityEducation'
 import { useLanguage } from '../contexts/LanguageContext'
 
@@ -8,7 +8,12 @@ const resultQualityDefaults = {
   verifyFindings: true,
   includePotential: false,
   minConfidenceScore: 55,
-  enableDomXss: false
+  scanDurationMinutes: 0,
+  learningRuleUsagePercent: 100,
+  enableDomXss: false,
+  enableHumanLikeInteraction: false,
+  writeupLinksText: '',
+  interactionPathsText: ''
 }
 
 // Scan Templates
@@ -63,7 +68,8 @@ const scanTemplates = {
       aggressive: true,
       includePotential: true,
       minConfidenceScore: 45,
-      enableDomXss: true
+      enableDomXss: true,
+      enableHumanLikeInteraction: true
     }
   },
   owasp: {
@@ -109,6 +115,87 @@ function ScanForm({ onSubmit }) {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [options, setOptions] = useState(scanTemplates.standard.options)
   const [selectedVuln, setSelectedVuln] = useState(null)
+  const [autoLearnerStatus, setAutoLearnerStatus] = useState(null)
+  const [autoLearnerBusy, setAutoLearnerBusy] = useState(false)
+  const [autoLearnerError, setAutoLearnerError] = useState('')
+  const [cleanupMessage, setCleanupMessage] = useState('')
+
+  const parseMultiLineInput = (input) => {
+    return String(input || '')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+  }
+
+  const fetchAutoLearnerStatus = async () => {
+    setAutoLearnerBusy(true)
+    try {
+      const response = await fetch('/api/learning/auto/status')
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || t('failedLoadData'))
+      }
+      setAutoLearnerStatus(data.autoLearner || null)
+      setAutoLearnerError('')
+    } catch (error) {
+      setAutoLearnerError(error.message)
+    } finally {
+      setAutoLearnerBusy(false)
+    }
+  }
+
+  const controlAutoLearner = async (action) => {
+    const endpoint = action === 'resume'
+      ? '/api/learning/auto/start'
+      : action === 'pause'
+        ? '/api/learning/auto/stop'
+        : '/api/learning/auto/tick'
+
+    setAutoLearnerBusy(true)
+    try {
+      const response = await fetch(endpoint, { method: 'POST' })
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || t('error'))
+      }
+      setAutoLearnerStatus(data.status || autoLearnerStatus)
+      setAutoLearnerError('')
+      setCleanupMessage('')
+    } catch (error) {
+      setAutoLearnerError(error.message)
+    } finally {
+      setAutoLearnerBusy(false)
+    }
+  }
+
+  const cleanupLearnedWriteups = async () => {
+    setAutoLearnerBusy(true)
+    try {
+      const response = await fetch('/api/learning/cleanup', { method: 'POST' })
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || t('error'))
+      }
+
+      const cleaned = data.cleanup || {}
+      setCleanupMessage(
+        `${t('learningCleanupDone')}: ${cleaned.beforeRules ?? 0} → ${cleaned.afterRules ?? 0}`
+      )
+      setAutoLearnerError('')
+      await fetchAutoLearnerStatus()
+    } catch (error) {
+      setAutoLearnerError(error.message)
+      setCleanupMessage('')
+    } finally {
+      setAutoLearnerBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    if (showAdvanced && !autoLearnerStatus && !autoLearnerBusy) {
+      fetchAutoLearnerStatus()
+    }
+  }, [showAdvanced, autoLearnerStatus, autoLearnerBusy])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -118,13 +205,33 @@ function ScanForm({ onSubmit }) {
     if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
       finalUrl = 'https://' + finalUrl
     }
-    
-    onSubmit(finalUrl, { ...options, template: selectedTemplate })
+
+    const writeupLinks = parseMultiLineInput(options.writeupLinksText)
+    const interactionPaths = parseMultiLineInput(options.interactionPathsText)
+    const finalOptions = {
+      ...options,
+      template: selectedTemplate,
+      writeupLinks,
+      interactionPaths,
+      scanDurationMinutes: Math.max(0, Number(options.scanDurationMinutes || 0)),
+      learningRuleUsagePercent: Math.max(1, Math.min(100, Number(options.learningRuleUsagePercent || 100)))
+    }
+
+    delete finalOptions.writeupLinksText
+    delete finalOptions.interactionPathsText
+
+    onSubmit(finalUrl, finalOptions)
   }
 
   const handleTemplateChange = (templateKey) => {
     setSelectedTemplate(templateKey)
-    setOptions(scanTemplates[templateKey].options)
+    setOptions((prev) => ({
+      ...scanTemplates[templateKey].options,
+      writeupLinksText: prev.writeupLinksText || '',
+      interactionPathsText: prev.interactionPathsText || '',
+      scanDurationMinutes: prev.scanDurationMinutes ?? 0,
+      learningRuleUsagePercent: prev.learningRuleUsagePercent ?? 100
+    }))
   }
 
   const features = [
@@ -359,6 +466,16 @@ function ScanForm({ onSubmit }) {
                   <span className="text-sm text-gray-300">{t('enableDomXssHeadless')}</span>
                 </label>
 
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={options.enableHumanLikeInteraction || false}
+                    onChange={(e) => setOptions({ ...options, enableHumanLikeInteraction: e.target.checked })}
+                    className="w-4 h-4 accent-cyber-purple"
+                  />
+                  <span className="text-sm text-gray-300">{t('enableHumanLikeInteraction')}</span>
+                </label>
+
                 <div>
                   <label className="text-sm text-gray-400 block mb-1">{t('minimumConfidenceScore')}</label>
                   <input
@@ -370,6 +487,146 @@ function ScanForm({ onSubmit }) {
                     className="w-full bg-dark-700 border border-dark-600 rounded-lg py-2 px-3 outline-none focus:border-cyber-blue"
                   />
                 </div>
+
+                <div>
+                  <label className="text-sm text-gray-400 block mb-1">{t('scanDurationMinutes')}</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1440"
+                    value={options.scanDurationMinutes ?? 0}
+                    onChange={(e) => setOptions({ ...options, scanDurationMinutes: parseInt(e.target.value, 10) || 0 })}
+                    className="w-full bg-dark-700 border border-dark-600 rounded-lg py-2 px-3 outline-none focus:border-cyber-blue"
+                  />
+                  <span className="text-xs text-gray-500">{t('scanDurationHint')}</span>
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-400 block mb-1">{t('learningRuleUsagePercent')}</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={options.learningRuleUsagePercent ?? 100}
+                    onChange={(e) => setOptions({ ...options, learningRuleUsagePercent: parseInt(e.target.value, 10) || 100 })}
+                    className="w-full bg-dark-700 border border-dark-600 rounded-lg py-2 px-3 outline-none focus:border-cyber-blue"
+                  />
+                  <span className="text-xs text-gray-500">{t('learningRuleUsageHint')}</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h5 className="text-sm font-bold text-cyber-purple mb-3">🧠 {t('learningAndGuidance')}</h5>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-300 block mb-1">{t('writeupLinksInputLabel')}</label>
+                  <textarea
+                    value={options.writeupLinksText || ''}
+                    onChange={(e) => setOptions({ ...options, writeupLinksText: e.target.value })}
+                    placeholder={t('writeupLinksPlaceholder')}
+                    rows={6}
+                    className="w-full bg-dark-700 border border-dark-600 rounded-lg py-2 px-3 outline-none focus:border-cyber-blue resize-y"
+                  />
+                  <span className="text-xs text-gray-500">{t('oneItemPerLineHint')}</span>
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-300 block mb-1">{t('interactionPathsInputLabel')}</label>
+                  <textarea
+                    value={options.interactionPathsText || ''}
+                    onChange={(e) => setOptions({ ...options, interactionPathsText: e.target.value })}
+                    placeholder={t('interactionPathsPlaceholder')}
+                    rows={6}
+                    className="w-full bg-dark-700 border border-dark-600 rounded-lg py-2 px-3 outline-none focus:border-cyber-blue resize-y"
+                  />
+                  <span className="text-xs text-gray-500">{t('interactionPathsHint')}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 bg-dark-900/40 border border-dark-600 rounded-xl p-3 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-cyber-blue">{t('autoLearnerControlsTitle')}</span>
+                  <button
+                    type="button"
+                    onClick={fetchAutoLearnerStatus}
+                    disabled={autoLearnerBusy}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-dark-500 bg-dark-700 hover:border-cyber-blue/60 disabled:opacity-60 flex items-center gap-2"
+                  >
+                    <FaSyncAlt className={autoLearnerBusy ? 'animate-spin' : ''} />
+                    {t('refresh')}
+                  </button>
+                </div>
+
+                <div className="grid md:grid-cols-4 gap-2 text-xs text-gray-300">
+                  <div>
+                    <span className="text-gray-500">{t('autoLearnerStatusLabel')}: </span>
+                    <span className={autoLearnerStatus?.running ? 'text-cyber-green' : 'text-gray-300'}>
+                      {autoLearnerStatus
+                        ? autoLearnerStatus.running
+                          ? t('autoLearnerRunning')
+                          : t('autoLearnerPaused')
+                        : t('loading')}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">{t('autoLearnerQueueLabel')}: </span>
+                    <span>{autoLearnerStatus?.queueSize ?? 0}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">{t('autoLearnerLearnedLabel')}: </span>
+                    <span>{autoLearnerStatus?.learnedWriteups ?? 0}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">{t('autoLearnerRulesLabel')}: </span>
+                    <span>{autoLearnerStatus?.importedRules ?? 0}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => controlAutoLearner(autoLearnerStatus?.running ? 'pause' : 'resume')}
+                    disabled={autoLearnerBusy}
+                    className="text-sm px-3 py-2 rounded-lg border border-dark-500 bg-dark-700 hover:border-cyber-blue/60 disabled:opacity-60 flex items-center gap-2"
+                  >
+                    {autoLearnerStatus?.running ? <FaPause /> : <FaPlay />}
+                    {autoLearnerStatus?.running ? t('pauseAutoLearner') : t('resumeAutoLearner')}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => controlAutoLearner('tick')}
+                    disabled={autoLearnerBusy}
+                    className="text-sm px-3 py-2 rounded-lg border border-dark-500 bg-dark-700 hover:border-cyber-green/60 disabled:opacity-60 flex items-center gap-2"
+                  >
+                    <FaBolt />
+                    {t('learnOneNow')}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={cleanupLearnedWriteups}
+                    disabled={autoLearnerBusy}
+                    className="text-sm px-3 py-2 rounded-lg border border-dark-500 bg-dark-700 hover:border-cyber-yellow/60 disabled:opacity-60 flex items-center gap-2"
+                  >
+                    <FaCog />
+                    {t('cleanupLearningData')}
+                  </button>
+                </div>
+
+                {autoLearnerStatus?.lastLearnedUrl && (
+                  <p className="text-xs text-gray-500 break-all">
+                    {t('autoLearnerLastLearned')}: {autoLearnerStatus.lastLearnedUrl}
+                  </p>
+                )}
+
+                {autoLearnerError && (
+                  <p className="text-xs text-cyber-red">{autoLearnerError}</p>
+                )}
+                {cleanupMessage && (
+                  <p className="text-xs text-cyber-green">{cleanupMessage}</p>
+                )}
               </div>
             </div>
 

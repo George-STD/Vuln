@@ -68,6 +68,8 @@
 | **OpenAPIImporter** | استيراد Swagger/OpenAPI specs |
 | **RobotsParser** | تحليل robots.txt و sitemap.xml |
 | **ScanScheduler** | جدولة فحوصات مؤقتة |
+| **LearningEngine** | ذاكرة تكيفية لتقليل FP + استيراد قواعد من write-ups |
+| **InteractiveBrowserScanner** | تفاعلات متصفح شبيهة بالبشر لاكتشاف إشارات ثغرات منطقية |
 
 ### 📊 تنسيقات التقارير
 
@@ -152,6 +154,13 @@ PORT=3001
 CLIENT_URL=http://localhost:5173
 JWT_SECRET=your-secret-key
 ENCRYPTION_KEY=your-32-char-key
+
+# التعلم التلقائي من write-ups (اختياري)
+AUTO_LEARN_WRITEUPS_ENABLED=true
+AUTO_LEARN_INTERVAL_MS=60000
+AUTO_LEARN_DISCOVERY_INTERVAL_MS=600000
+AUTO_LEARN_MAX_RULES_PER_LINK=4
+AUTO_LEARN_MAX_PER_SOURCE=40
 ```
 
 ---
@@ -198,6 +207,10 @@ cd server && npm start
 3. اختر نوع الفحص (سريع/شامل/مخصص)
 4. اضغط **"ابدأ الفحص"**
 5. تابع التقدم في الوقت الحقيقي
+
+إعدادات متقدمة جديدة في الواجهة:
+- **مدة الفحص الزمني (بالدقائق)**: يستمر تشغيل دورات الفحص النشط حتى انتهاء الوقت المحدد.
+- **نسبة استخدام قواعد التعلّم (%)**: استخدام نسبة محددة فقط من قواعد الـ write-ups المتعلّمة في الفحص التالي لموازنة السرعة مع التغطية.
 
 ### 2️⃣ تصدير التقارير
 
@@ -316,6 +329,24 @@ POST /api/bounty/kill-switch/deactivate - إلغاء Kill Switch
 | `GET` | `/api/scan/:id/walkthrough` | 📖 Walkthrough PDF |
 | `GET` | `/api/scan/:id/sarif` | تصدير SARIF |
 | `POST` | `/api/walkthrough/generate` | إنشاء walkthrough من JSON |
+
+### التعلم التكيفي (Adaptive Learning)
+
+| Method | Endpoint | الوصف |
+|--------|----------|-------|
+| `GET` | `/api/learning/status` | حالة ذاكرة التعلم والقواعد |
+| `GET` | `/api/learning/writeups` | عرض قواعد write-ups المستوردة |
+| `POST` | `/api/learning/writeups/import` | استيراد قواعد كشف جديدة من write-ups |
+| `POST` | `/api/learning/writeups/import-links` | جلب روابط write-ups وتوليد قواعد كشف تلقائياً |
+| `POST` | `/api/learning/feedback` | تسجيل ملاحظات true/false positive |
+| `GET` | `/api/learning/auto/status` | حالة التعلم التلقائي |
+| `POST` | `/api/learning/auto/start` | بدء التعلم التلقائي من write-ups |
+| `POST` | `/api/learning/auto/stop` | إيقاف التعلم التلقائي |
+| `POST` | `/api/learning/auto/tick` | تنفيذ دورة تعلّم واحدة فوراً |
+| `POST` | `/api/learning/cleanup` | تنظيف القواعد المتعلمة (حذف المكرر/ضعيف الفائدة) |
+
+يتم حفظ بيانات التعلّم وحالة المعلّم التلقائي داخل `server/data/learning/`:
+`feedback.json` و`writeup-rules.json` و`writeup-history.json` و`auto-learner-state.json`.
 
 ### الجدولة
 

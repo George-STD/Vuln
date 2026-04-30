@@ -66,6 +66,8 @@
 | **OpenAPIImporter** | Import Swagger/OpenAPI specs |
 | **RobotsParser** | Parse robots.txt and sitemap.xml |
 | **ScanScheduler** | Schedule automated scans |
+| **LearningEngine** | Adaptive FP memory + write-up rule ingestion |
+| **InteractiveBrowserScanner** | Human-like browser interactions for logic-bug signals |
 
 ### 📊 Report Formats
 
@@ -150,6 +152,13 @@ PORT=3001
 CLIENT_URL=http://localhost:5173
 JWT_SECRET=your-secret-key
 ENCRYPTION_KEY=your-32-char-key
+
+# Automatic write-up learning (optional)
+AUTO_LEARN_WRITEUPS_ENABLED=true
+AUTO_LEARN_INTERVAL_MS=60000
+AUTO_LEARN_DISCOVERY_INTERVAL_MS=600000
+AUTO_LEARN_MAX_RULES_PER_LINK=4
+AUTO_LEARN_MAX_PER_SOURCE=40
 ```
 
 ---
@@ -196,6 +205,10 @@ cd server && npm start
 3. Choose scan type (Quick/Standard/Deep)
 4. Click **"Start Scan Now"**
 5. Monitor progress in real-time
+
+Advanced scan controls in the UI now include:
+- **Timed Scan Duration (minutes)**: keeps active scanning cycles running until the configured time is reached.
+- **Learning Rules Usage (%)**: apply only a percentage of learned write-up rules in the next scan to balance speed vs. coverage.
 
 ### 2️⃣ Exporting Reports
 
@@ -314,6 +327,24 @@ POST /api/bounty/kill-switch/deactivate - Deactivate Kill Switch
 | `GET` | `/api/scan/:id/walkthrough` | 📖 Walkthrough PDF |
 | `GET` | `/api/scan/:id/sarif` | SARIF export |
 | `POST` | `/api/walkthrough/generate` | Generate walkthrough from JSON |
+
+### Adaptive Learning
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/learning/status` | Learning memory/rules status |
+| `GET` | `/api/learning/writeups` | List imported write-up rules |
+| `POST` | `/api/learning/writeups/import` | Import new write-up-derived detection rules |
+| `POST` | `/api/learning/writeups/import-links` | Fetch write-up URLs and auto-generate detection rules |
+| `POST` | `/api/learning/feedback` | Record true/false-positive analyst feedback |
+| `GET` | `/api/learning/auto/status` | Auto learner runtime status |
+| `POST` | `/api/learning/auto/start` | Start automatic write-up learning |
+| `POST` | `/api/learning/auto/stop` | Stop automatic write-up learning |
+| `POST` | `/api/learning/auto/tick` | Force one immediate learning cycle |
+| `POST` | `/api/learning/cleanup` | Remove duplicate/low-value learned write-up rules |
+
+Learning data and auto-learner state are persisted under `server/data/learning/`:
+`feedback.json`, `writeup-rules.json`, `writeup-history.json`, and `auto-learner-state.json`.
 
 ### Scheduling
 

@@ -1,0 +1,18 @@
+{
+  "updatedAt": "2026-04-29T20:49:53.179Z",
+  "queue": [],
+  "lastDiscoveryAt": 0,
+  "retryState": {},
+  "sourceStats": {},
+  "status": {
+    "ticks": 0,
+    "learnedWriteups": 0,
+    "importedRules": 0,
+    "lastRunAt": null,
+    "lastLearnedAt": null,
+    "lastLearnedUrl": null,
+    "lastError": null,
+    "paused": false,
+    "pausedAt": null
+  }
+}

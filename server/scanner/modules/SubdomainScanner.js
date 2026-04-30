@@ -62,25 +62,29 @@ export class SubdomainScanner extends BaseScanner {
       }
       
       // Report discovered subdomains as info
-      if (discoveredSubdomains.length > 0) {
+      const reportableSubdomains = discoveredSubdomains.filter((subdomainInfo) =>
+        this.isReportableSubdomainStatus(subdomainInfo.status)
+      );
+
+      if (reportableSubdomains.length > 0) {
         vulnerabilities.push({
           type: 'Information Disclosure',
           subType: 'Subdomain Enumeration',
           severity: 'info',
           url: this.targetUrl,
-          evidence: `Discovered ${discoveredSubdomains.length} subdomains`,
-          description: `Found subdomains: ${discoveredSubdomains.map(s => s.subdomain).join(', ')}`,
+          evidence: `Discovered ${reportableSubdomains.length} reachable subdomains`,
+          description: `Found subdomains: ${reportableSubdomains.map(s => s.subdomain).join(', ')}`,
           remediation: 'Review exposed subdomains for sensitive functionality. Consider using DNS CAA records.',
           references: [
             'https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/03-Test_File_Extensions_Handling_for_Sensitive_Information'
           ],
           cvss: 2.0,
           cwe: 'CWE-200',
-          details: discoveredSubdomains
+          details: reportableSubdomains
         });
         
         // Check for interesting/sensitive subdomains
-        const sensitiveSubdomains = discoveredSubdomains.filter(s => 
+        const sensitiveSubdomains = reportableSubdomains.filter(s => 
           ['admin', 'dev', 'staging', 'test', 'backup', 'internal', 'vpn', 'jenkins', 'gitlab'].some(
             sens => s.subdomain.includes(sens)
           )
@@ -209,5 +213,9 @@ export class SubdomainScanner extends BaseScanner {
     }
     
     return vulnerabilities;
+  }
+
+  isReportableSubdomainStatus(status) {
+    return [200, 201, 204, 301, 302, 307, 308].includes(Number(status));
   }
 }

@@ -15,6 +15,8 @@ import { OwnershipVerifier } from './utils/OwnershipVerifier.js';
 import { SARIFExporter } from './utils/SARIFExporter.js';
 import { OpenAPIImporter } from './scanner/modules/OpenAPIImporter.js';
 import { ScanScheduler } from './scanner/modules/ScanScheduler.js';
+import learningEngine from './scanner/LearningEngine.js';
+import { WriteupAutoLearner } from './scanner/WriteupAutoLearner.js';
 
 // Enterprise modules
 import enterpriseRoutes from './routes/enterprise.js';
@@ -62,11 +64,31 @@ const ownershipVerifier = new OwnershipVerifier();
 // Initialize SARIF exporter
 const sarifExporter = new SARIFExporter();
 
+// Initialize automatic write-up learner
+const writeupAutoLearner = new WriteupAutoLearner({
+  learningEngine,
+  enabled: process.env.AUTO_LEARN_WRITEUPS_ENABLED !== 'false',
+  intervalMs: Number(process.env.AUTO_LEARN_INTERVAL_MS || 60000),
+  discoveryIntervalMs: Number(process.env.AUTO_LEARN_DISCOVERY_INTERVAL_MS || 600000),
+  maxRulesPerLink: Number(process.env.AUTO_LEARN_MAX_RULES_PER_LINK || 4),
+  maxPerSource: Number(process.env.AUTO_LEARN_MAX_PER_SOURCE || 40),
+  onLog: (entry) => {
+    const message = entry?.message || 'Writeup auto learner event';
+    const type = entry?.type || 'info';
+    if (typeof logger[type] === 'function') {
+      logger[type](message);
+    } else {
+      logger.info(message);
+    }
+  }
+});
+
 // Initialize enterprise modules
 (async () => {
   try {
     await pluginManager.init();
     workerManager.start();
+    await writeupAutoLearner.start();
     await auditLogger.logSystem(AUDIT_EVENTS.SYSTEM_STARTUP, { version: '2.0.0' });
     logger.info('Enterprise modules initialized');
     logger.info('Bug Bounty safety system ready');
@@ -92,6 +114,159 @@ app.get('/api/health', (req, res) => {
     name: 'VulnHunter Pro',
     activeScans: activeScans.size
   });
+});
+
+app.get('/api/learning/status', async (req, res) => {
+  try {
+    await learningEngine.initialize();
+    res.json(learningEngine.getStatus());
+  } catch (error) {
+    res.status(500).json({ error: `Failed to load learning status: ${error.message}` });
+  }
+});
+
+app.get('/api/learning/writeups', async (req, res) => {
+  try {
+    await learningEngine.initialize();
+    res.json({
+      rules: learningEngine.listWriteupRules(),
+      status: learningEngine.getStatus()
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to load write-up rules: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/writeups/import', async (req, res) => {
+  try {
+    const rules = Array.isArray(req.body?.rules) ? req.body.rules : [];
+    if (rules.length === 0) {
+      return res.status(400).json({ error: 'rules array is required' });
+    }
+
+    const result = await learningEngine.importWriteupRules({ rules });
+    res.json({
+      message: 'Write-up rules imported successfully',
+      ...result
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to import write-up rules: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/writeups/import-links', async (req, res) => {
+  try {
+    const links = Array.isArray(req.body?.links) ? req.body.links : [];
+    if (links.length === 0) {
+      return res.status(400).json({ error: 'links array is required' });
+    }
+
+    const result = await learningEngine.importWriteupLinks({
+      links,
+      maxLinks: req.body?.maxLinks,
+      options: req.body?.options || {}
+    });
+
+    res.json({
+      message: 'Write-up links processed successfully',
+      ...result
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to import write-up links: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/feedback', async (req, res) => {
+  try {
+    const { verdict, notes, vulnerability, fingerprint } = req.body || {};
+    if (!verdict) {
+      return res.status(400).json({ error: 'verdict is required (true_positive or false_positive)' });
+    }
+    if (!fingerprint && !vulnerability) {
+      return res.status(400).json({ error: 'fingerprint or vulnerability object is required' });
+    }
+
+    const result = await learningEngine.recordFeedback({
+      verdict,
+      notes,
+      fingerprint,
+      vulnerability
+    });
+
+    res.json({
+      message: 'Feedback recorded successfully',
+      ...result
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to record feedback: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/cleanup', async (req, res) => {
+  try {
+    await learningEngine.initialize();
+    const cleanup = await learningEngine.cleanupWriteupRules({
+      dryRun: req.body?.dryRun === true,
+      minRuleScore: req.body?.minRuleScore,
+      reason: 'api_manual'
+    });
+
+    res.json({
+      message: cleanup.dryRun ? 'Learning cleanup preview completed' : 'Learning cleanup completed',
+      cleanup,
+      status: learningEngine.getStatus()
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to cleanup learning data: ${error.message}` });
+  }
+});
+
+app.get('/api/learning/auto/status', async (req, res) => {
+  try {
+    await learningEngine.initialize();
+    res.json({
+      autoLearner: writeupAutoLearner.getStatus(),
+      learning: learningEngine.getStatus()
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to read auto learner status: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/auto/start', async (req, res) => {
+  try {
+    const status = await writeupAutoLearner.start({ force: true });
+    res.json({
+      message: 'Automatic write-up learning started',
+      status
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to start auto learner: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/auto/stop', async (req, res) => {
+  try {
+    const status = await writeupAutoLearner.stop();
+    res.json({
+      message: 'Automatic write-up learning stopped',
+      status
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Failed to stop auto learner: ${error.message}` });
+  }
+});
+
+app.post('/api/learning/auto/tick', async (req, res) => {
+  try {
+    const status = await writeupAutoLearner.tick();
+    res.json({
+      message: 'Auto learner tick executed',
+      status
+    });
+  } catch (error) {
+    res.status(500).json({ error: `Auto learner tick failed: ${error.message}` });
+  }
 });
 
 app.post('/api/scan', async (req, res) => {
@@ -548,6 +723,7 @@ server.listen(PORT, () => {
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully...');
   await auditLogger.logSystem(AUDIT_EVENTS.SYSTEM_SHUTDOWN, { reason: 'SIGTERM' });
+  await writeupAutoLearner.stop({ pause: false });
   workerManager.stop();
   await auditLogger.shutdown();
   server.close(() => {
@@ -559,6 +735,7 @@ process.on('SIGTERM', async () => {
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully...');
   await auditLogger.logSystem(AUDIT_EVENTS.SYSTEM_SHUTDOWN, { reason: 'SIGINT' });
+  await writeupAutoLearner.stop({ pause: false });
   workerManager.stop();
   await auditLogger.shutdown();
   server.close(() => {

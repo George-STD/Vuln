@@ -110,12 +110,60 @@ function App() {
     setScanState('scanning')
     setTargetUrl(url)
 
+    const normalizeStringList = (value) => {
+      if (Array.isArray(value)) {
+        return value.map((item) => String(item || '').trim()).filter(Boolean)
+      }
+
+      if (typeof value === 'string') {
+        return value
+          .split(/\r?\n/)
+          .map((item) => item.trim())
+          .filter(Boolean)
+      }
+
+      return []
+    }
+
+    const normalizedWriteupLinks = normalizeStringList(options.writeupLinks)
+    const normalizedInteractionPaths = normalizeStringList(options.interactionPaths)
+
     const normalizedOptions = {
       ...options,
-      maxDepth: options.maxDepth ?? options.depth ?? 3
+      maxDepth: options.maxDepth ?? options.depth ?? 3,
+      scanDurationMinutes: Number.isFinite(Number(options.scanDurationMinutes))
+        ? Math.max(0, Math.min(1440, Number(options.scanDurationMinutes)))
+        : 0,
+      learningRuleUsagePercent: Number.isFinite(Number(options.learningRuleUsagePercent))
+        ? Math.max(1, Math.min(100, Math.round(Number(options.learningRuleUsagePercent))))
+        : 100,
+      writeupLinks: normalizedWriteupLinks,
+      interactionPaths: normalizedInteractionPaths
     }
 
     delete normalizedOptions.depth
+
+    if (normalizedInteractionPaths.length > 0) {
+      normalizedOptions.enableHumanLikeInteraction = true
+    }
+
+    if (normalizedWriteupLinks.length > 0) {
+      normalizedOptions.learningMode = true
+    }
+
+    if (Array.isArray(normalizedOptions.scanModules)) {
+      const moduleSet = new Set(normalizedOptions.scanModules.map((moduleName) => String(moduleName)))
+
+      if (normalizedOptions.enableDomXss) {
+        moduleSet.add('domXss')
+      }
+
+      if (normalizedOptions.enableHumanLikeInteraction || normalizedInteractionPaths.length > 0) {
+        moduleSet.add('interactiveLogic')
+      }
+
+      normalizedOptions.scanModules = Array.from(moduleSet)
+    }
 
     try {
       const response = await fetch('/api/scan', {

@@ -229,6 +229,8 @@ export class SQLiScanner extends BaseScanner {
       if (!baselineResponse) return vulnerabilities;
       const baselineBody = baselineResponse.data?.toString() || '';
       const baselineLength = baselineBody.length;
+      const baselineStatus = baselineResponse.status;
+      const baselineError = this.detectSQLError(baselineBody);
       
       for (const [key, originalValue] of params.entries()) {
         if (this.stopped) break;
@@ -254,9 +256,20 @@ export class SQLiScanner extends BaseScanner {
           
           const response = await this.makeRequest(testUrl.href);
           if (!response) continue;
-          
-          const errorDetected = this.detectSQLError(response.data);
+
+          const responseBody = response.data?.toString() || '';
+          const errorDetected = this.detectSQLError(responseBody);
           if (errorDetected) {
+            const bodyDelta = Math.abs(responseBody.length - baselineLength);
+            const sameAsBaseline = baselineError &&
+              baselineError.database === errorDetected.database &&
+              baselineError.evidence === errorDetected.evidence;
+            const statusChanged = response.status !== baselineStatus;
+
+            if (sameAsBaseline && bodyDelta < 120 && !statusChanged) {
+              continue;
+            }
+
             vulnerabilities.push({
               type: 'SQL Injection',
               subType: `Error-based (${errorDetected.database})`,
@@ -264,7 +277,7 @@ export class SQLiScanner extends BaseScanner {
               url: url,
               parameter: key,
               payload: payload,
-              evidence: errorDetected.evidence,
+              evidence: `${errorDetected.evidence} | HTTP ${baselineStatus}→${response.status} | Δbody=${bodyDelta}B`,
               description: `SQL Injection vulnerability detected in parameter "${key}". Database type: ${errorDetected.database}`,
               remediation: 'Use parameterized queries (prepared statements). Never concatenate user input directly into SQL queries. Implement input validation and use an ORM.',
               references: [
@@ -330,6 +343,9 @@ export class SQLiScanner extends BaseScanner {
           const trueLen = trueBody.length;
           const falseLen = falseBody.length;
 
+          const trueSimilarity = this.calculateSimilarity(trueBody, baselineBody);
+          const falseSimilarity = this.calculateSimilarity(falseBody, baselineBody);
+          const trueFalseSimilarity = this.calculateSimilarity(trueBody, falseBody);
           const trueDiffFromBaseline = Math.abs(trueLen - baselineLength);
           const falseDiffFromBaseline = Math.abs(falseLen - baselineLength);
           const trueFalseDiff = Math.abs(trueLen - falseLen);
@@ -341,11 +357,13 @@ export class SQLiScanner extends BaseScanner {
            * 3) TRUE ≠ FALSE: The two conditions produced different outputs
            *    (This rules out cases where BOTH payloads break the app equally)
            */
-          const trueMatchesBaseline = trueDiffFromBaseline < 100;
-          const falseDiffersFromBaseline = falseDiffFromBaseline > 200;
-          const trueAndFalseDiffer = trueFalseDiff > 200;
+          const trueMatchesBaseline = trueSimilarity >= 0.93 && trueDiffFromBaseline < 140;
+          const falseDiffersFromBaseline = falseSimilarity <= 0.86 || falseDiffFromBaseline > 220;
+          const trueAndFalseDiffer = trueFalseSimilarity <= 0.86 || trueFalseDiff > 220;
+          const statusSignal = trueResp.status === baselineStatus &&
+            (falseResp.status !== baselineStatus || falseDiffFromBaseline > 200);
 
-          if (trueMatchesBaseline && falseDiffersFromBaseline && trueAndFalseDiffer) {
+          if (trueMatchesBaseline && falseDiffersFromBaseline && trueAndFalseDiffer && statusSignal) {
             this.log(`Boolean SQLi candidate on "${key}" (${pair.syntax}). Running confirmation round...`, 'info');
 
             // ── CONFIRMATION ROUND with different payload syntax ──
@@ -364,12 +382,26 @@ export class SQLiScanner extends BaseScanner {
             ]);
 
             if (cTrueResp && cFalseResp) {
-              const cTrueLen = (cTrueResp.data?.toString() || '').length;
-              const cFalseLen = (cFalseResp.data?.toString() || '').length;
+              const cTrueBody = cTrueResp.data?.toString() || '';
+              const cFalseBody = cFalseResp.data?.toString() || '';
+              const cTrueLen = cTrueBody.length;
+              const cFalseLen = cFalseBody.length;
+              const cTrueSimilarity = this.calculateSimilarity(cTrueBody, baselineBody);
+              const cFalseSimilarity = this.calculateSimilarity(cFalseBody, baselineBody);
+              const cTfSimilarity = this.calculateSimilarity(cTrueBody, cFalseBody);
               const cTrueDiff = Math.abs(cTrueLen - baselineLength);
               const cTFDiff = Math.abs(cTrueLen - cFalseLen);
+              const cStatusSignal = cTrueResp.status === baselineStatus &&
+                (cFalseResp.status !== baselineStatus || cTFDiff > 200);
 
-              if (cTrueDiff < 100 && cTFDiff > 200) {
+              if (
+                cTrueSimilarity >= 0.92 &&
+                cFalseSimilarity <= 0.86 &&
+                cTfSimilarity <= 0.86 &&
+                cTrueDiff < 150 &&
+                cTFDiff > 220 &&
+                cStatusSignal
+              ) {
                 // Confirmed with a second payload syntax — high confidence
                 boolConfirmed = true;
                 vulnerabilities.push({
@@ -379,7 +411,7 @@ export class SQLiScanner extends BaseScanner {
                   url: url,
                   parameter: key,
                   payload: pair.trueP,
-                  evidence: `Confirmed with two payload syntaxes. TRUE≈Baseline (Δ${trueDiffFromBaseline}B), FALSE≠Baseline (Δ${falseDiffFromBaseline}B), TRUE≠FALSE (Δ${trueFalseDiff}B). Confirmation: Δ${cTFDiff}B.`,
+                  evidence: `Confirmed with two payload syntaxes. TRUE sim=${(trueSimilarity * 100).toFixed(1)}%, FALSE sim=${(falseSimilarity * 100).toFixed(1)}%, TRUE/FALSE sim=${(trueFalseSimilarity * 100).toFixed(1)}%. Confirmation TRUE/FALSE sim=${(cTfSimilarity * 100).toFixed(1)}%, Δ=${cTFDiff}B.`,
                   description: `Boolean-based blind SQL Injection confirmed in parameter "${key}" with double validation.`,
                   remediation: 'Use parameterized queries. Implement proper input validation.',
                   references: [
@@ -401,18 +433,17 @@ export class SQLiScanner extends BaseScanner {
           const timePayload = "' AND SLEEP(3)--";
           const timeUrl = new URL(url);
           timeUrl.searchParams.set(key, originalValue + timePayload);
-          
-          const startTime = Date.now();
-          await this.makeRequest(timeUrl.href, { timeout: 10000 });
-          const duration = Date.now() - startTime;
-          
-          if (duration >= 3000) {
-            // Confirmation request for time-based
-            const confirmStart = Date.now();
-            await this.makeRequest(timeUrl.href, { timeout: 10000 });
-            const confirmDuration = Date.now() - confirmStart;
 
-            if (confirmDuration >= 2500) {
+          const controlDurations = await this.measureRequestDurations(url, 2, { timeout: 10000 });
+          const injectedDurations = await this.measureRequestDurations(timeUrl.href, 2, { timeout: 10000 });
+
+          if (controlDurations.length >= 2 && injectedDurations.length >= 2) {
+            const controlAvg = (controlDurations[0] + controlDurations[1]) / 2;
+            const injectedAvg = (injectedDurations[0] + injectedDurations[1]) / 2;
+            const delayDelta = injectedAvg - controlAvg;
+            const stableInjectedDelay = Math.abs(injectedDurations[0] - injectedDurations[1]) < 1200;
+
+            if (delayDelta >= 2200 && stableInjectedDelay) {
               vulnerabilities.push({
                 type: 'SQL Injection',
                 subType: 'Time-based Blind',
@@ -420,8 +451,8 @@ export class SQLiScanner extends BaseScanner {
                 url: url,
                 parameter: key,
                 payload: timePayload,
-                evidence: `Response delayed by ${duration}ms, confirmed at ${confirmDuration}ms`,
-                description: `Time-based blind SQL Injection detected in parameter "${key}"`,
+                evidence: `Baseline avg=${Math.round(controlAvg)}ms, injected avg=${Math.round(injectedAvg)}ms, delay delta=${Math.round(delayDelta)}ms`,
+                description: `Time-based blind SQL Injection detected in parameter "${key}" with control baseline.`,
                 remediation: 'Use parameterized queries. Implement proper input validation.',
                 references: [
                   'https://portswigger.net/web-security/sql-injection/blind#exploiting-blind-sql-injection-by-triggering-time-delays'
@@ -444,6 +475,21 @@ export class SQLiScanner extends BaseScanner {
     const vulnerabilities = [];
     
     try {
+      const baselineData = {};
+      form.inputs.forEach((input) => {
+        if (!input.name) return;
+        baselineData[input.name] = input.value || 'baseline-value';
+      });
+
+      const baselineResponse = await this.makeRequest(form.action, {
+        method: form.method,
+        data: form.method === 'POST' ? baselineData : undefined,
+        params: form.method === 'GET' ? baselineData : undefined
+      });
+      const baselineBody = baselineResponse?.data?.toString() || '';
+      const baselineError = this.detectSQLError(baselineBody);
+      const baselineStatus = baselineResponse?.status ?? 0;
+
       for (const input of form.inputs) {
         if (!input.name || this.stopped) continue;
         if (input.type === 'hidden' || input.type === 'submit') continue;
@@ -461,9 +507,20 @@ export class SQLiScanner extends BaseScanner {
           });
           
           if (!response) continue;
-          
-          const errorDetected = this.detectSQLError(response.data);
+
+          const responseBody = response.data?.toString() || '';
+          const errorDetected = this.detectSQLError(responseBody);
           if (errorDetected) {
+            const bodyDelta = Math.abs(responseBody.length - baselineBody.length);
+            const sameAsBaseline = baselineError &&
+              baselineError.database === errorDetected.database &&
+              baselineError.evidence === errorDetected.evidence;
+            const statusChanged = response.status !== baselineStatus;
+
+            if (sameAsBaseline && bodyDelta < 120 && !statusChanged) {
+              continue;
+            }
+
             vulnerabilities.push({
               type: 'SQL Injection',
               subType: `Error-based (${errorDetected.database})`,
@@ -472,7 +529,7 @@ export class SQLiScanner extends BaseScanner {
               method: form.method,
               parameter: input.name,
               payload: payload,
-              evidence: errorDetected.evidence,
+              evidence: `${errorDetected.evidence} | HTTP ${baselineStatus}→${response.status} | Δbody=${bodyDelta}B`,
               description: `SQL Injection vulnerability in form field "${input.name}"`,
               remediation: 'Use parameterized queries. Never concatenate user input into SQL.',
               references: [
@@ -491,6 +548,52 @@ export class SQLiScanner extends BaseScanner {
     }
     
     return vulnerabilities;
+  }
+
+  calculateSimilarity(a, b) {
+    const tokensA = this.tokenize(a);
+    const tokensB = this.tokenize(b);
+
+    if (tokensA.size === 0 && tokensB.size === 0) return 1;
+    if (tokensA.size === 0 || tokensB.size === 0) return 0;
+
+    let intersection = 0;
+    for (const token of tokensA) {
+      if (tokensB.has(token)) {
+        intersection++;
+      }
+    }
+
+    const union = tokensA.size + tokensB.size - intersection;
+    if (union === 0) return 1;
+    return intersection / union;
+  }
+
+  tokenize(value) {
+    const text = String(value || '')
+      .toLowerCase()
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/[^a-z0-9]+/g, ' ');
+
+    const tokens = text
+      .split(/\s+/)
+      .filter((token) => token.length >= 3)
+      .slice(0, 1500);
+
+    return new Set(tokens);
+  }
+
+  async measureRequestDurations(url, attempts = 2, options = {}) {
+    const durations = [];
+
+    for (let i = 0; i < attempts; i++) {
+      const startedAt = Date.now();
+      await this.makeRequest(url, options);
+      durations.push(Date.now() - startedAt);
+      if (this.stopped) break;
+    }
+
+    return durations;
   }
   
   detectSQLError(html) {
